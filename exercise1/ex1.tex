@@ -42,6 +42,15 @@
 \begin{document}
 \section*{Task 1}
 \section*{Task 2}
+\begin{equation*}
+	p(h|e_1,e_2) = \frac{p(e_1,e_2|h) \cdot p(h)}{p(e_1,e_2)} = \frac{p(e_1|e_2,h) \cdot p(e_2|h) \cdot p(h)}{p(e_1,e_2)}
+\end{equation*}
+\subsection*{a)} From the above formula we see that the target probability can be calculated using the values of (ii). The values of (i) are not sufficient as we can not determine $p(e_1,e_2|h)$ without the conditional independence assumption. The values of (iii) are not sufficient because we can not determine $p(e_1,e_2)$ in the denominator.
+\subsection*{b)} The values of (ii) are of course still sufficient. Using the conditional independence assumption, the right hand side of the above equation becomes
+\begin{equation*}
+\frac{p(e_1|h) \cdot p(e_2|h) \cdot p(h)}{p(e_1,e_2)}
+\end{equation*}
+and can be calculated given the values from (i). The values from (iii) are still not sufficient, for the same reason as in a).
 \section*{Task 3}
 Let $X, Y$ be independent poisson distributed random variables with parameters $\lambda_X, \lambda_Y$ and distributions $p_{\lambda_X}, p_{\lambda_Y}$. \\
 Because $X$ and $Y$ are independent, the probability distribution of $X+Y$ is
