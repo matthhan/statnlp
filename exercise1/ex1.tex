@@ -1,0 +1,62 @@
+%% Dokumentenklasse (Koma Script) -----------------------------------------
+\documentclass[%
+   11pt,              % Schriftgroesse
+   ngerman,           % wird an andere Pakete weitergereicht
+   a4paper,           % Seitengroesse
+   DIV11,             % Textbereichsgroesse (siehe Koma Skript Dokumentation !)
+]{scrartcl}%     Klassen: scrartcl, scrreprt, scrbook
+% -------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc} % Font Encoding, benoetigt fuer Umlaute
+\usepackage[ngerman]{babel}   % Spracheinstellung
+
+\usepackage[T1]{fontenc} % T1 Schrift Encoding
+\usepackage{textcomp}    % Zusatzliche Symbole (Text Companion font extension)
+\usepackage{lmodern}     % Latin Modern Schrift
+\usepackage{listings}
+\usepackage{framed}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{framed}
+\usepackage{listings}
+\usepackage[left=2cm,right=3cm,top=2cm,bottom=2cm,includeheadfoot]{geometry}
+%Kopf- und Fußzeile
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+%Übungsteilnehmer
+\fancyhead[L]{Matthias Hansen, XXXXXX~~Lukas Huwald, 322890\\}
+%Kopfzeile mittig
+\fancyhead[R]{NLP Exercise01}
+%Linie oben
+\renewcommand{\headrulewidth}{0.5pt}
+
+%Fußzeile links bzw. innen
+\fancyfoot[L]{}
+%Fußzeile rechts bzw. außen
+\fancyfoot[R]{\thepage}
+%Linie unten
+\renewcommand{\footrulewidth}{0.5pt}
+%% Dokument Beginn %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\section*{Task 1}
+\section*{Task 2}
+\section*{Task 3}
+Let $X, Y$ be independent poisson distributed random variables with parameters $\lambda_X, \lambda_Y$ and distributions $p_{\lambda_X}, p_{\lambda_Y}$. \\
+Because $X$ and $Y$ are independent, the probability distribution of $X+Y$ is
+\begin{equation*}
+	p_\text{Sum}(n) = \sum_{i+j=n} p_{\lambda_X}(i) \cdot p_{\lambda_Y}(j), \qquad n \in \mathbb{N}_0.
+\end{equation*} 
+We obtain
+\begin{align*}
+	p_\text{Sum}(n) &= \sum_{i+j=n} p_{\lambda_X}(i) \cdot p_{\lambda_Y}(j) \\
+	&= \sum_{i=0}^n p_{\lambda_X}(i) \cdot p_{\lambda_Y}(n-i) \\
+	&= \sum_{i=0}^n \frac{e^{-\lambda_X}\lambda_X^i}{i!} \frac{e^{-\lambda_Y}\lambda_Y^{n-i}}{(n-i)!} \\
+	&= e^{-(\lambda_X + \lambda_Y)} \cdot \sum_{i=0}^n  \frac{\lambda_X^i\lambda_Y^{n-i}}{i!(n-i)!} \\
+	&= \frac{e^{-(\lambda_X + \lambda_Y)}}{n!} \cdot \sum_{i=0}^n  {n \choose i} \lambda_X^i\lambda_Y^{n-i} \\
+	&\underset{\text{Binomial Theorem}}{=} \frac{e^{-(\lambda_X + \lambda_Y)}}{n!} \cdot (\lambda_X + \lambda_Y)^n \\
+\end{align*}
+This is the poisson distribution with parameter $\lambda_X + \lambda_Y$, so the sum $X + Y$ is also poisson distributed.
+\section*{Task 4}
+\end{document}
