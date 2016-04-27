@@ -41,7 +41,13 @@
 %% Dokument Beginn %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \section*{Task 1}
-$p(a| b) = p(a) \iff \frac{p(a,b)}{p(b)} = p(a) \iff p(a,b) = p(a) \cdot p(b) \iff p(b,a) = p(b) \cdot p(a) \iff \frac{p(b,a)}{p(a)} = p(b) \iff p(b| a) = p(b)$
+$\underbrace{p(a| b) = p(a)}_{\text{First Definition}} \stackrel{Def.}{\iff}
+\frac{p(a,b)}{p(b)} = p(a) \iff
+\underbrace{p(a,b) = p(a) \cdot p(b)}_{\text{Third Definition}} \iff$ 
+
+$p(b,a) = p(b) \cdot p(a) \iff 
+\frac{p(b,a)}{p(a)} = p(b) \stackrel{Def.}{\iff}
+\underbrace{p(b| a) = p(b)}_{\text{Second Definition}}$
 \section*{Task 2}
 \begin{equation*}
 	p(h|e_1,e_2) = \frac{p(e_1,e_2|h) \cdot p(h)}{p(e_1,e_2)} = \frac{p(e_1|e_2,h) \cdot p(e_2|h) \cdot p(h)}{p(e_1,e_2)}
