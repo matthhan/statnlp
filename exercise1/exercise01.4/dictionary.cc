@@ -56,7 +56,7 @@ int Dictionary::foundAt(Word w, int index) {
     else return -2;
 }
 int Dictionary::probe(int index) {
-    return (index + 1) % this->HASH_TABLE_SIZE;
+    return (index*index) % this->HASH_TABLE_SIZE;
 }
 /*int main() {
     std::vector<Word> testWords = std::vector<Word>(10);
