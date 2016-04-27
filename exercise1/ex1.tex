@@ -26,7 +26,7 @@
 \pagestyle{fancy}
 \fancyhf{}
 %Übungsteilnehmer
-\fancyhead[L]{Matthias Hansen, XXXXXX~~Lukas Huwald, 322890\\}
+\fancyhead[L]{Matthias Hansen, 331600~~Lukas Huwald, 322890\\}
 %Kopfzeile mittig
 \fancyhead[R]{NLP Exercise01}
 %Linie oben
@@ -41,6 +41,7 @@
 %% Dokument Beginn %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \section*{Task 1}
+$p(a| b) = p(a) \iff \frac{p(a,b)}{p(b)} = p(a) \iff p(a,b) = p(a) \cdot p(b) \iff p(b,a) = p(b) \cdot p(a) \iff \frac{p(b,a)}{p(a)} = p(b) \iff p(b| a) = p(b)$
 \section*{Task 2}
 \begin{equation*}
 	p(h|e_1,e_2) = \frac{p(e_1,e_2|h) \cdot p(h)}{p(e_1,e_2)} = \frac{p(e_1|e_2,h) \cdot p(e_2|h) \cdot p(h)}{p(e_1,e_2)}
