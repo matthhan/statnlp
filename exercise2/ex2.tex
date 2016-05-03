@@ -50,9 +50,9 @@ We have that
 \end{equation*}
 and as mentioned in the task we ignore the $p(N|c)$ here as it should be trained independent of class. We want to train models for $p(c)$ and $p(N_1^W|N,c)$ using maximum likelihood. As discussed in the lecture we model these with independent parameter sets to train them independently. \par
 We begin with training $p(c)$. Assume we have given $I$ training examples $(c_i, {N_i}_1^W)$ of count vectors ${N_i}_1^W$ for $W$ different words and class ids $c_i$ for $C$ different classes. As a distribution model we simply choose a finite table, i.e.
-\begin{equation*}
+\begin{equation}\label{const}
 	p(c) = \theta_c \qquad c = 1,\ldots,C
-\end{equation*} 
+\end{equation} 
 and we want to learn parameters $\theta_c$ such that $\sum_{c=1}^C \theta_c = 1$. \\
 The likelihood function is 
 \begin{equation*}
@@ -64,14 +64,34 @@ and the log likelihood function is
 \end{equation*}
 We add the contraint that the $\theta$ sum up to unity using lagrangian multiplier $\lambda$:
 \begin{equation*}
-	\tilde{L}(\theta) = \sum_{i=1}^I \text{log}(\theta_{c_i}) - \lambda \cdot (\sum_{c=1}^C \theta_c - 1)
+	\tilde{L}(\theta, \lambda) = \sum_{i=1}^I \text{log}(\theta_{c_i}) - \lambda \cdot (\sum_{c=1}^C \theta_c - 1)
 \end{equation*}
 We compute the partial derivatives and obtain
 \begin{align*}
-	\frac{\partial}{\partial \theta_c} \tilde{L}(\theta) &= \sum_{i=1}^I \delta(c,c_i) \cdot \frac{1}{\theta_c} - \lambda = \frac{N_c}{\theta_c} - \lambda \\
+	\frac{\partial}{\partial \theta_c} \tilde{L}(\theta, \lambda) &= \sum_{i=1}^I \delta(c,c_i) \cdot \frac{1}{\theta_c} - \lambda = \frac{I_c}{\theta_c} - \lambda \\
+	\frac{\partial}{\partial \lambda} \tilde{L}(\theta, \lambda) &= \sum_{c=1}^C \theta_c - 1
 \end{align*}
-where $N_c$ is the number of examples of class $c$.
-
+where $I_c$ is the number of examples of class $c$. \\
+At a maximum, the gradient must vanish, i.e.
+\begin{equation}\label{subs}
+	\frac{I_c}{\theta_c} - \lambda = 0 \quad \Rightarrow \quad \theta_c = \frac{I_c}{\lambda}
+\end{equation}
+Substituting this into the constraint (\ref{const}) yields
+\begin{equation*}
+	\sum_{c=1}^C \frac{I_c}{\lambda} = 1 \quad \Rightarrow \quad \lambda = \sum_{c=1}^C I_c = I
+\end{equation*}
+Using this value for $\lambda$ in (\ref{subs}) finally yields
+\begin{equation*}
+	\theta_c = \frac{I_c}{I}
+\end{equation*}
+so the maximum likelihood estimates are simply the relative frequencies of the classes. \par
+To be formally correct, we verify that this is really a maximum by computing the second derivative of the log likelihood function. We obtain for the Hesse matrix
+\begin{equation*}
+	H_{c,k} := \frac{\partial^2}{\partial \theta_c \partial \theta_k} \hat{L}(\theta) = \begin{cases}
+	0 & c \neq k \\
+	- \frac{I_c}{\theta_c^2} & c = k \\ \end{cases}
+\end{equation*}
+So the Hesse matrix is zero except on the diagonal, where it is always negative (the square and $I_c$ are always positive and there is a minus in front). It follows that the Hesse matrix is negative definite at all positions, i.e. the space is concave and the solution must be a global maximum.
 \section*{Task 4}
 \section*{Task 5}
 \end{document}
