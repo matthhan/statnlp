@@ -32,6 +32,8 @@
 %Linie oben
 \renewcommand{\headrulewidth}{0.5pt}
 
+\setlength{\parskip}{1ex}
+
 %Fußzeile links bzw. innen
 \fancyfoot[L]{}
 %Fußzeile rechts bzw. außen
@@ -62,7 +64,7 @@ and the log likelihood function is
 \begin{equation*}
 	\hat{L}(\theta) = \sum_{i=1}^I \text{log}(\theta_{c_i})
 \end{equation*}
-We add the contraint that the $\theta$ sum up to unity using lagrangian multiplier $\lambda$:
+We add the contraint that the $\theta_c$ sum up to unity using lagrangian multiplier $\lambda$:
 \begin{equation*}
 	\tilde{L}(\theta, \lambda) = \sum_{i=1}^I \text{log}(\theta_{c_i}) - \lambda \cdot (\sum_{c=1}^C \theta_c - 1)
 \end{equation*}
@@ -91,7 +93,103 @@ To be formally correct, we verify that this is really a maximum by computing the
 	0 & c \neq k \\
 	- \frac{I_c}{\theta_c^2} & c = k \\ \end{cases}
 \end{equation*}
-So the Hesse matrix is zero except on the diagonal, where it is always negative (the square and $I_c$ are always positive and there is a minus in front). It follows that the Hesse matrix is negative definite at all positions, i.e. the space is concave and the solution must be a global maximum.
+So the Hesse matrix is zero except on the diagonal, where it is always negative (the square and $I_c$ are always positive and there is a minus in front). It follows that the Hesse matrix is negative definite at all positions, i.e. the space is concave and the solution must be a global maximum. \par
+We continue with training $p(N_1^W|N,c)$ for a given class $c$. Thus, we look at the training data of class $c$ only, i.e. count vectors ${N_i}_1^W$ for $i = 1,\ldots,I_c$. As specified in the lecture we use the multinomial distribution
+\begin{equation*}
+	p(N_1^W|N,c) = N! \cdot \prod_{w=1}^W \frac{\theta_w^{N_w}}{N_w !}
+\end{equation*}
+with parameters $\theta_w = p(w|c)$ we want to train, subject to
+\begin{equation}\label{cons2}
+	\sum_{w=1}^W \theta_w = 1
+\end{equation}
+The likelihood function is 
+\begin{equation*}
+	L(\theta) = \prod_{i=1}^{I_c} (\sum_{w=1}^W {N_i}_w)! \cdot \prod_{w=1}^W \frac{\theta_w^{{N_i}_w}}{{N_i}_w !}
+\end{equation*}
+The term $(\sum_{w=1}^W {N_i}_w)!$ is constant for any $\theta$ and thus we ignore it from now on in the optimization. The same holds for the ${N_i}_w !$ terms.\\
+The simplified log likelihood function is
+\begin{equation*}
+	\hat{L}(\theta) = \sum_{i=1}^{I_c} \sum_{w=1}^W \text{log}(\theta_w) \cdot {N_i}_w
+\end{equation*}
+We add the contraint that the $\theta_w$ sum up to unity using lagrangian multiplier $\lambda$:
+\begin{equation*}
+	\tilde{L}(\theta, \lambda) = \sum_{i=1}^{I_c} \sum_{w=1}^W (\text{log}(\theta_w) \cdot {N_i}_w) - \lambda \cdot (\sum_{w=1}^W \theta_w - 1)
+\end{equation*}
+We compute the partial derivatives and obtain
+\begin{align*}
+	\frac{\partial}{\partial \theta_w} \tilde{L}(\theta, \lambda) &=  \sum_{i=1}^{I_c} \frac{{N_i}_w}{\theta_w} - \lambda\\
+	\frac{\partial}{\partial \lambda} \tilde{L}(\theta, \lambda) &= \sum_{w=1}^W \theta_w - 1
+\end{align*}
+At a maximum, the gradient must vanish, i.e.
+\begin{equation}\label{subs2}
+	\sum_{i=1}^{I_c} \frac{{N_i}_w}{\theta_w} - \lambda = 0 \quad \Rightarrow \quad \theta_w = \frac{1}{\lambda} \sum_{i=1}^{I_c} {N_i}_w
+\end{equation}
+Substituting this into the constraint (\ref{cons2}) yields
+\begin{equation*}
+	\sum_{w=1}^W \frac{1}{\lambda} \sum_{i=1}^{I_c} {N_i}_w = 1 \quad \Rightarrow \quad \lambda = \sum_{w=1}^W \sum_{i=1}^{I_c} {N_i}_w =: N_c
+\end{equation*}
+where we denote by $N_c$ the total number of words observed in texts for the class $c$ we consider. Using this value for $\lambda$ in (\ref{subs2}) finally yields
+\begin{equation*}
+	\theta_w = \frac{1}{N_c} \sum_{i=1}^{I_c} {N_i}_w
+\end{equation*}
+i.e. the maximum likelihood estimate for the weights $\theta_w = p(w|c)$ are simply the relative frequencies of the words inside the texts of the given class. \par
+To be formally correct, we verify that this is really a maximum by computing the second derivative of the log likelihood function. We obtain for the Hesse matrix
+\begin{equation*}
+	H_{w,v} := \frac{\partial^2}{\partial \theta_w \partial \theta_v} \hat{L}(\theta) = \begin{cases}
+	0 & w \neq v \\
+	- \frac{1}{\theta_w^2} \sum_{i=1}^{I_c} {N_i}_w & w = v \\ \end{cases}
+\end{equation*}
+So the Hesse matrix is zero except on the diagonal, where it is always negative (the square and ${N_i}_w$ are always positive and there is a minus in front). It follows that the Hesse matrix is negative definite at all positions, i.e. the space is concave and the solution must be a global maximum.
+\subsection*{b)}
+We use the same notation for the training data as for a) and start with the likelihood function$(W = 3)$
+\begin{equation*}
+	L(\theta) = \prod_{i=1}^{I_c} ({N_i}_1 + {N_i}_2 + {N_i}_3)! \cdot \frac{\theta_1^{{N_i}_1}}{{N_i}_1 !} \cdot \frac{\theta_2^{{N_i}_2}}{{N_i}_2 !} \cdot \frac{(1 - \theta_1 - \theta_2)^{{N_i}_3}}{{N_i}_3 !}
+\end{equation*}
+Again we ignore all the constant factors (the faculty terms). The simplified log likelihood function is
+\begin{equation*}
+	\hat{L}(\theta) = \sum_{i=1}^{I_c} \text{log}(\theta_1) \cdot {N_i}_1 + \text{log}(\theta_2) \cdot {N_i}_2 + \text{log}(1 - \theta_1 - \theta_2) \cdot {N_i}_3
+\end{equation*}
+To simplify notation we introduce the following new symbols:
+\begin{align}\label{symb}
+	N_1 &= \sum_{i=1}^{I_c} {N_i}_1 &\text{total count of word 1 in class}\\
+	N_2 &= \sum_{i=1}^{I_c} {N_i}_2 &\text{total count of word 2 in class}\\
+	N_3 &= \sum_{i=1}^{I_c} {N_i}_3 &\text{total count of word 3 in class}\\
+	N_c &= N_1 + N_2 + N_3 &\text{(as above: total word count in the class)}
+\end{align}
+The log likelihood function becomes
+\begin{equation*}
+	\hat{L}(\theta) = \text{log}(\theta_1) \cdot N_1 + \text{log}(\theta_2) \cdot N_2 + \text{log}(1 - \theta_1 - \theta_2) \cdot N_3
+\end{equation*}
+The partial derivatives are
+\begin{align}\label{ins}
+	\frac{\partial}{\partial \theta_1} \hat{L}(\theta) &= \frac{1}{\theta_1}N_1 - \frac{1}{1 - \theta_1 - \theta_2} N_3\\
+	\frac{\partial}{\partial \theta_2} \hat{L}(\theta) &= \frac{1}{\theta_2}N_2 - \frac{1}{1 - \theta_1 - \theta_2} N_3 
+\end{align}
+At the maximum the gradient must vanish, i.e. the above two equations must equal 0. Substracting the equations, we obtain
+\begin{equation}\label{fin}
+	\theta_1 = \frac{N_1}{N_2}\theta_2
+\end{equation}
+Putting this into (\ref{ins}), we have
+\begin{equation*}
+	\frac{N_2}{\theta_2} - \frac{1}{1 - (1 + \frac{N_1}{N_2})\theta_2}N_3 = 0
+\end{equation*}
+Solving for $\theta_2$ yields
+\begin{equation*}
+	\theta_2 = \frac{N_2}{N_1 + N_2 + N_3} = \frac{N_2}{N_c}
+\end{equation*}
+Putting this into (\ref{fin}), we get
+\begin{equation*}
+	\theta_1 =  \frac{N_1}{N_c}
+\end{equation*}
+and the third parameter is
+\begin{equation*}
+	1 - \theta_1 - \theta_2 = 1 - \frac{N_1}{N_c} - \frac{N_2}{N_c} = \frac{N_3}{N_c}
+\end{equation*}
+So by changing the notation back again using (\ref{symb}) we see that we obtained the same result as in a):
+\begin{equation*}
+	\theta_w = \frac{1}{N_c} \sum_{i=1}^{I_c} {N_i}_w
+\end{equation*}
+We already verified the second derivative there, so we don't do that again.
 \section*{Task 4}
 \section*{Task 5}
 \end{document}
