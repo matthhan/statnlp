@@ -43,6 +43,35 @@
 \section*{Task 1}
 \section*{Task 2}
 \section*{Task 3}
+\subsection*{a)}
+We have that 
+\begin{equation*}
+	p(c, N, N_1^W) = p(c) \cdot p(N|c) \cdot p(N_1^W|N,c)
+\end{equation*}
+and as mentioned in the task we ignore the $p(N|c)$ here as it should be trained independent of class. We want to train models for $p(c)$ and $p(N_1^W|N,c)$ using maximum likelihood. As discussed in the lecture we model these with independent parameter sets to train them independently. \par
+We begin with training $p(c)$. Assume we have given $I$ training examples $(c_i, {N_i}_1^W)$ of count vectors ${N_i}_1^W$ for $W$ different words and class ids $c_i$ for $C$ different classes. As a distribution model we simply choose a finite table, i.e.
+\begin{equation*}
+	p(c) = \theta_c \qquad c = 1,\ldots,C
+\end{equation*} 
+and we want to learn parameters $\theta_c$ such that $\sum_{c=1}^C \theta_c = 1$. \\
+The likelihood function is 
+\begin{equation*}
+	L(\theta) = \prod_{i=1}^I p(c_i) = \prod_{i=1}^I \theta_{c_i}
+\end{equation*}
+and the log likelihood function is
+\begin{equation*}
+	\hat{L}(\theta) = \sum_{i=1}^I \text{log}(\theta_{c_i})
+\end{equation*}
+We add the contraint that the $\theta$ sum up to unity using lagrangian multiplier $\lambda$:
+\begin{equation*}
+	\tilde{L}(\theta) = \sum_{i=1}^I \text{log}(\theta_{c_i}) - \lambda \cdot (\sum_{c=1}^C \theta_c - 1)
+\end{equation*}
+We compute the partial derivatives and obtain
+\begin{align*}
+	\frac{\partial}{\partial \theta_c} \tilde{L}(\theta) &= \sum_{i=1}^I \delta(c,c_i) \cdot \frac{1}{\theta_c} - \lambda = \frac{N_c}{\theta_c} - \lambda \\
+\end{align*}
+where $N_c$ is the number of examples of class $c$.
+
 \section*{Task 4}
 \section*{Task 5}
 \end{document}
