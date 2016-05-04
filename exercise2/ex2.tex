@@ -192,4 +192,16 @@ So by changing the notation back again using (\ref{symb}) we see that we obtaine
 We already verified the second derivative there, so we don't do that again.
 \section*{Task 4}
 \section*{Task 5}
+We define
+\begin{equation*}
+	\Lambda := \sum_{w=1}^W \lambda_w, \qquad p(w) := \frac{\lambda_w}{\Lambda}
+\end{equation*}
+Using this, we obtain
+\begin{align*}
+\prod_{w=1}^W \text{Poisson}(N_w) &= \prod_{w=1}^W \frac{e^{-\lambda_w} \cdot \lambda_w^{N_w}}{N_w !} \\
+&= \frac{e^{-\Lambda}}{N!} \cdot N! \prod_{w=1}^W \frac{\lambda_w^{N_w}}{N_w !} \\
+&= \frac{e^{-\Lambda} \cdot \Lambda^N}{N!} \cdot N! \prod_{w=1}^W \frac{p(w)^{N_w}}{N_w !} \\
+&= \frac{e^{-\Lambda} \cdot \Lambda^N}{N!} \cdot {N \choose N_1,\ldots N_W} \prod_{w=1}^W p(w)^{N_w} \\
+&= \text{Poisson}(N) \cdot \text{Multinomial}(N_1^W|N)
+\end{align*}
 \end{document}
