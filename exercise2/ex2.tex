@@ -77,6 +77,33 @@ $d(x) = \underset{c}{arg max}\;  p(c|x)$
 Where step (1) is possible, because the sum does not depend on c, i.e. it is constant. Therefore, the second term which is maximal has to be subtracted to get a minimal result. Note especially the shift from argmin to argmax.
 \
 \section*{Task 2}
+
+To arrive at a maximum likelihood estimate, we have to find:
+
+$\underset{\lambda}{arg max}\; p(x_1^N|\lambda) = $
+$\underset{\lambda}{arg max}\;  \displaystyle\prod_{i= 1}^N p(x_i|\lambda) = $
+$\underset{\lambda}{arg max}\;  \log(\displaystyle\prod_{i= 1}^N p(x_i|\lambda)) = $
+$\underset{\lambda}{arg max}\;  \displaystyle\sum_{i= 1}^N \log(p(x_i|\lambda)) = $
+$\underset{\lambda}{arg max}\;  \displaystyle\sum_{i= 1}^N \log(\frac{1}{x_i!}\cdot e^{-\lambda}\cdot \lambda^{x_i} ) = $
+$\underset{\lambda}{arg max}\;  \displaystyle\sum_{i= 1}^N (\log(\frac{1}{x_i!}) + \log(e^{-\lambda}) + \log(\lambda^{x_i} )) = $
+
+$\underset{\lambda}{arg max}\;  \displaystyle\sum_{i= 1}^N (\log(\frac{1}{x_i!}) - \lambda + \log(\lambda^{x_i} ))$
+
+We can find the maximizing argument by setting the derivative to zero:
+
+$\frac{\delta}{\delta\lambda} \displaystyle\sum_{i= 1}^N (\log(\frac{1}{x_i!}) - \lambda + \log(\lambda^{x_i} )) = $
+$\displaystyle\sum_{i= 1}^N \frac{\delta}{\delta\lambda} (\log(\frac{1}{x_i!}) - \lambda + \log(\lambda^{x_i} )) = $
+
+$\displaystyle\sum_{i= 1}^N \frac{\delta}{\delta\lambda} (\log(\frac{1}{x_i!})) - \frac{\delta}{\delta\lambda}(\lambda) + \frac{\delta}{\delta\lambda}(\log(\lambda^{x_i})) = $
+$\displaystyle\sum_{i= 1}^N - 1 + \frac{1}{\lambda^{x_i}} \cdot x_i \cdot \lambda^{x_i-1} = $
+
+$\displaystyle\sum_{i= 1}^N - 1 + \frac{x_i}{\lambda} = $
+$-N + \frac{1}{\lambda} \displaystyle\sum_{i= 1}^N   x_i= 0$
+$\iff N =\frac{1}{\lambda}\displaystyle\sum_{i= 1}^N  x_i$
+$\iff \frac{N}\cdot \lambda =\displaystyle\sum_{i= 1}^N  x_i$
+$\iff \lambda =\frac{\sum_{i= 1}^N  x_i}{n}$
+
+So, in the maximum likelihood estimation, $\lambda$ ends up being the average of the observations.
 \section*{Task 3}
 \subsection*{a)}
 We have that 
