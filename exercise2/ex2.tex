@@ -43,6 +43,39 @@
 %% Dokument Beginn %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \section*{Task 1}
+Bayes' decision rule for some loss function L that depends on some input data x is 
+
+$d(x) = \underset{c}{arg min} \displaystyle\sum_{\tilde{c}} p(\tilde{c}|x) \cdot L[c,\tilde{c}] \stackrel{\text{For these Definitions}}{=}$
+
+$d(x) = \underset{c}{arg min} \displaystyle\sum_{\tilde{c}} p(\tilde{c}|x) \cdot (\gamma - \delta(c,\tilde{c}))$
+
+
+\subsection*{a)}
+We can use the dependency on the selected class:
+
+$d(x) = \underset{c}{arg min} \displaystyle\sum_{\tilde{c}} p(\tilde{c}|x) \cdot (\gamma_c - \delta(c,\tilde{c})) \stackrel{\text{Eliminate Kronecker }\delta}{=}$
+
+$d(x) = \underset{c}{arg min} \displaystyle\sum_{\tilde{c}\neq c} p(\tilde{c}|x) \cdot \gamma_c \stackrel{\text{nothing in the sum depends on c}}{=}$
+
+$d(x) = \underset{c}{arg min} \; \gamma_c\cdot\displaystyle\sum_{\tilde{c}\neq c} p(\tilde{c}|x) \stackrel{\text{probabilities add up to 1}}{=}$
+
+$d(x) = \underset{c}{arg min} \; \gamma_c \cdot (1 - p(c | x))=$
+
+$d(x) = \underset{c}{arg min} \; \gamma_c - \gamma_c \cdot p(c | x)$
+
+\subsection*{b)}
+We can use the dependency on the real class by eliminating the Kronecker delta in a different way:
+
+$d(x) = \underset{c}{arg min} \displaystyle\sum_{\tilde{c}} p(\tilde{c}|x) \cdot (\gamma_{\tilde{c}} - \delta(c,\tilde{c})) \stackrel{\text{Eliminate Kronecker }\delta}{=}$
+
+$d(x) = \underset{c}{arg min} (\displaystyle\sum_{\tilde{c}} p(\tilde{c}|x) \cdot \gamma_{\tilde{c}}) - \gamma_{\tilde{c}} \cdot p(c|x) \stackrel{(1)}{=}$
+
+$d(x) = \underset{c}{arg max}\;  \gamma_{\tilde{c}} \cdot p(c|x) \stackrel{\gamma_{\tilde{c}}\text{ is constant w.r.t. c}}{=}$
+
+$d(x) = \underset{c}{arg max}\;  p(c|x)$
+
+Where step (1) is possible, because the sum does not depend on c, i.e. it is constant. Therefore, the second term which is maximal has to be subtracted to get a minimal result. Note especially the shift from argmin to argmax.
+\
 \section*{Task 2}
 \section*{Task 3}
 \subsection*{a)}
@@ -191,6 +224,28 @@ So by changing the notation back again using (\ref{symb}) we see that we obtaine
 \end{equation*}
 We already verified the second derivative there, so we don't do that again.
 \section*{Task 4}
+Define the following set:
+
+$w_{N_1^W} = \{w | N_1^W \text{ is the count vector of } w\}$ for any count vector $N_1^W$.
+
+Using probability theory, one can argue that event of the occurence of a count vector is the union of the events of the occurence of each document that has this particular count vector. Due to the axiom of $\sigma$-additivity, we then have $p(N_1^W) =\displaystyle\sum_{w_1^N} p(w_1^N)$. Similarly, we have 
+$p(N_1^W|c)= \displaystyle\sum_{w_1^N} p(N_1^W|c) \stackrel{(1)}{=}
+\displaystyle\sum_{w_1^N} \displaystyle\prod_{w}^N p(w|c)\stackrel{(2)}{=}
+|w_{N_1^W}| \displaystyle\prod_{w}^N p(w|c)\stackrel{(3)}{=}.
+\frac{N!}{\prod_w N_w!} \displaystyle\prod_{w}^N p(w|c)$.
+
+Where in (1), we quietly make the assumption that the events of the occurence of each word are independent of each other (which was shown to be a good assumption in the lecture) and in (2), we make use of the fact that the product does not depend on the running variable of the sum and thus the sum can be rewritten as a factor of the size of the set that we sum over. Finally in (3) we use the multinomial coefficient that represents the number of permutations of a set in which certain elements can be repeated, i.e. permutations of a multiset or a count vector.
+
+In the following, we give a short explanation of the multinomial coefficient:
+In simple cases, a count vector's entries might only contain 0's and 1's, e.g. each word from the vocabulary occurs at most once. Then the number of words is $\displaystyle\sum_{i=1}^W n_i$ and $|w_{N_1^W}|$ is the number of permutations of this number of words. 
+
+The number of permutations of a set of n elements can be calculated by first considering how many possibilities there are for the first position (n many) and then multiplying with the number of possibilities there are for the second, third, \ldots, n-th position if all previous positions have been filled already (n-1,n-2,\ldots 1). This leads us to the formula $|w_{N_1^W}|= \displaystyle\prod_{i=1}^N i =: N!$ (for this simple case).
+
+However, this approach works only if no word is repeated. Consider e.g. the vocabulary $\{``Alice'',``Bob''\}$ and the count vector $(2,0)$. Treating this count vector as above results in the incorrect answer that there are two distinct permutations. However, there is only one permutation, namely ``Alice Alice'', because two equal words cannot be distinguished in the permutation.
+
+To solve this problem, one can first treat a count vector with repetition as a count vector without repetition and then ``remove'' the duplicate permutations generated this way. The number of duplicate permutations is then the product of the duplicate permutations that are ``caused'' by each word in the dictionary and the number of duplicate permutations caused by one specific word is simply the number of permutations of a set of its count. Thus, one arrives at the formula for permutations with repetition, otherwise known as the multinomial coefficient.
+
+
 \section*{Task 5}
 We define
 \begin{equation*}
