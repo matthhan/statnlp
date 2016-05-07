@@ -47,13 +47,13 @@ Bayes' decision rule for some loss function L that depends on some input data x 
 
 $d(x) = \underset{c}{arg min} \displaystyle\sum_{\tilde{c}} p(\tilde{c}|x) \cdot L[c,\tilde{c}] \stackrel{\text{For these Definitions}}{=}$
 
-$d(x) = \underset{c}{arg min} \displaystyle\sum_{\tilde{c}} p(\tilde{c}|x) \cdot (\gamma - \delta(c,\tilde{c}))$
+$d(x) = \underset{c}{arg min} \displaystyle\sum_{\tilde{c}} p(\tilde{c}|x) \cdot (\gamma - \gamma \cdot \delta(c,\tilde{c}))$
 
 
 \subsection*{a)}
 We can use the dependency on the selected class:
 
-$d(x) = \underset{c}{arg min} \displaystyle\sum_{\tilde{c}} p(\tilde{c}|x) \cdot (\gamma_c - \delta(c,\tilde{c})) \stackrel{\text{Eliminate Kronecker }\delta}{=}$
+$d(x) = \underset{c}{arg min} \displaystyle\sum_{\tilde{c}} p(\tilde{c}|x) \cdot (\gamma_c - \gamma_c \cdot \delta(c,\tilde{c})) \stackrel{\text{Eliminate Kronecker }\delta}{=}$
 
 $d(x) = \underset{c}{arg min} \displaystyle\sum_{\tilde{c}\neq c} p(\tilde{c}|x) \cdot \gamma_c \stackrel{\text{nothing in the sum depends on c}}{=}$
 
@@ -66,13 +66,11 @@ $d(x) = \underset{c}{arg min} \; \gamma_c - \gamma_c \cdot p(c | x)$
 \subsection*{b)}
 We can use the dependency on the real class by eliminating the Kronecker delta in a different way:
 
-$d(x) = \underset{c}{arg min} \displaystyle\sum_{\tilde{c}} p(\tilde{c}|x) \cdot (\gamma_{\tilde{c}} - \delta(c,\tilde{c})) \stackrel{\text{Eliminate Kronecker }\delta}{=}$
+$d(x) = \underset{c}{arg min} \displaystyle\sum_{\tilde{c}} p(\tilde{c}|x) \cdot (\gamma_{\tilde{c}} - \gamma_{\tilde{c}} \cdot \delta(c,\tilde{c})) \stackrel{\text{Eliminate Kronecker }\delta}{=}$
 
-$d(x) = \underset{c}{arg min} (\displaystyle\sum_{\tilde{c}} p(\tilde{c}|x) \cdot \gamma_{\tilde{c}}) - \gamma_{\tilde{c}} \cdot p(c|x) \stackrel{(1)}{=}$
+$d(x) = \underset{c}{arg min} (\displaystyle\sum_{\tilde{c}} p(\tilde{c}|x) \cdot \gamma_{\tilde{c}}) - \gamma_{c} \cdot p(c|x) \stackrel{(1)}{=}$
 
-$d(x) = \underset{c}{arg max}\;  \gamma_{\tilde{c}} \cdot p(c|x) \stackrel{\gamma_{\tilde{c}}\text{ is constant w.r.t. c}}{=}$
-
-$d(x) = \underset{c}{arg max}\;  p(c|x)$
+$d(x) = \underset{c}{arg max}\;  \gamma_{c} \cdot p(c|x)$
 
 Where step (1) is possible, because the sum does not depend on c, i.e. it is constant. Therefore, the second term which is maximal has to be subtracted to get a minimal result. Note especially the shift from argmin to argmax.
 \
