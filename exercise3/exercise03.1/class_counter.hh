@@ -6,9 +6,11 @@
 class ClassCounter {
     public:
         void addToCount(std::string className);
-        int getCount(std::string className);
         ClassCounter();
+        double relativeFrequency(std::string className);
     private:
+        int getCount(std::string className);
         std::map<std::string,int> counts;
+        int totalCount;
 };
 #endif
