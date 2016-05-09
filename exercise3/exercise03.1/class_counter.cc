@@ -13,3 +13,10 @@ ClassCounter::ClassCounter() {
 double ClassCounter::relativeFrequency(std::string className) {
     return this->getCount(className)/this->totalCount;
 }
+std::vector<std::string> ClassCounter::getVectorOfClasses() {
+    auto res = std::vector<std::string>();
+    for(auto key:this->counts) {
+        res.push_back(key.first);
+    }
+    return res;
+}
