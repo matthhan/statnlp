@@ -15,5 +15,6 @@ class MultinomialClassifier {
         ClassCounter classCounter;
         MultinomialModel model;
         Dictionary* dictionary;
+        double getProbabilityOfClass(std::string klass,Document &doc);
 };
 #endif
