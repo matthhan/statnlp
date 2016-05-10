@@ -1,16 +1,23 @@
 #include "document.hh"
-#include <sstring>
+#include <sstream>
+
+std::string readSpaceSeparatedWord(std::stringstream& stream) {
+    std::string s; std::getline(stream,s,' ');return s;
+}
 Document Document::parseFromLine(std::string str,Dictionary dic) {
     auto res = Document();
     std::stringstream stream = std::stringstream(str);
-    
-    //TODO implement
-    //Ignore First word
-    //Then real class
-    //Then occurence counts
-    //Read Words and count occurences
-    return Document();
+    res.guid = readSpaceSeparatedWord(stream);
+    res.realClass = readSpaceSeparatedWord(stream);
+    while(stream) {
+        auto word = readSpaceSeparatedWord(stream);
+        auto countStr = readSpaceSeparatedWord(stream);
+        int count = std::stoi(countStr);
+        int index = dic.insert(word);
+        res.contentFrequencies[index] = count;
+    } 
+    return res;
 }
 Document::Document() {
-    this->contentFrequencies = std::vector<std::pair<int,int>>();
+    this->contentFrequencies = std::map<int,int>();
 }
