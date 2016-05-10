@@ -17,8 +17,8 @@ int main(int argc, char* argv[]) {
     std::string vocabPath = "20news/20news.voc";
 
     auto trainDataFile = std::ifstream(trainDataPath);
-    auto classifier = MultinomialClassifier();
     auto dictionary = Dictionary();
+    auto classifier = MultinomialClassifier(&dictionary);
     while(canReadMore(trainDataFile)) {
         std::string w = readLine(trainDataFile);
         Document doc = Document::parseFromLine(w,dictionary);

@@ -1,8 +1,8 @@
 #include "multinomial_model.hh"
-void updateFrequencies(Document doc,Dictionary dic) {
+void MultinomialModel::updateFrequencies(Document doc,Dictionary dic) {
     return;
 }
-double getClassConditionalProbability() {
+double MultinomialModel::getClassConditionalProbability() {
     return 0;
     //
 }
