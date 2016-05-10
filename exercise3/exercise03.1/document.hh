@@ -6,7 +6,7 @@
 #define DOCUMENT_HH
 class Document {
     public:
-        static Document parseFromLine(std::string,Dictionary dic);
+        static Document parseFromLine(std::string &w,Dictionary &dic);
         std::map<int,int> contentFrequencies;
         std::string guid;
         std::string realClass; 

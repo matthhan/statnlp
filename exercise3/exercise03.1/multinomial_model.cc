@@ -1,5 +1,5 @@
 #include "multinomial_model.hh"
-void MultinomialModel::updateFrequencies(Document doc,Dictionary dic) {
+void MultinomialModel::updateFrequencies(Document &doc,Dictionary &dic) {
     //TODO: implement
     return;
 }

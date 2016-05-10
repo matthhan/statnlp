@@ -26,24 +26,33 @@ int main(int argc, char* argv[]) {
     std::string vocabPath = params["vocabPath"];
 
     auto trainDataFile = std::ifstream(trainDataPath);
+    std::cout << trainDataPath << std::endl;
     auto dictionary = Dictionary();
     auto classifier = MultinomialClassifier(&dictionary);
+    
+
+    int i = 1;
+    std::cout << "Reading training data" << std::endl;
     while(canReadMore(trainDataFile)) {
+        if((i%1000) == 0)std::cout << "" << i << ", " << std::flush;
+        i++;
         std::string w = readLine(trainDataFile);
         Document doc = Document::parseFromLine(w,dictionary);
         classifier.trainOnDocument(doc);
     }
+    std::cout << std::endl << "Finished Training Model" << std::endl;
     trainDataFile.close();
 
-    auto testDataFile = std::ifstream(testDataPath);
+    /*auto testDataFile = std::ifstream(testDataPath);
     int testDataConsidered = 0;
     int classifiedCorrectly = 0;
-    while(canReadMore(trainDataFile)) {
+
+    while(canReadMore(testDataFile)) {
         std::string w = readLine(trainDataFile);
         Document doc = Document::parseFromLine(w,dictionary);
         testDataConsidered++;
         if(classifier.classify(doc) == doc.realClass) classifiedCorrectly++;
-    }
+    }*/
 }
 
 std::map<std::string,std::string> parseCLIParams(int argc,char* argv[]) {
@@ -84,4 +93,6 @@ void printUsage() {
 std::string readLine(std::ifstream& stream) {
     std::string s;std::getline(stream,s); return s;
 }
-bool canReadMore(std::ifstream& stream) {return !stream.eof();}
+bool canReadMore(std::ifstream& stream) {
+    return !stream.eof();
+}

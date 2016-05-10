@@ -8,8 +8,8 @@
 
 class MultinomialClassifier {
     public:
-        void trainOnDocument(Document doc);
-        std::string classify(Document doc);
+        void trainOnDocument(Document &doc);
+        std::string classify(Document &doc);
         MultinomialClassifier(Dictionary* dic);
     private:
         ClassCounter classCounter;

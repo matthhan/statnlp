@@ -5,7 +5,7 @@
 
 class MultinomialModel {
     public:
-        void updateFrequencies(Document doc,Dictionary dic);
+        void updateFrequencies(Document &doc,Dictionary &dic);
         double getClassConditionalProbability();
     private:
 };
