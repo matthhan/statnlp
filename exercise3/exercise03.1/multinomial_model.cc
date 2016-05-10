@@ -1,7 +1,7 @@
 #include "multinomial_model.hh"
 double multinomialCoefficient(Document &doc);
 int factorial(int n);
-void MultinomialModel::updateFrequencies(Document &doc,Dictionary &dic) {
+void MultinomialModel::updateFrequencies(Document &doc) {
     std::string klass = doc.realClass;
     auto ma = this->classConditionalProbabilities;
     //Create the counter for this class if it does not exist yet

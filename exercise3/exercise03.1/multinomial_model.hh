@@ -8,7 +8,7 @@
 
 class MultinomialModel {
     public:
-        void updateFrequencies(Document &doc,Dictionary &dic);
+        void updateFrequencies(Document &doc);
         double getClassConditionalProbability(Document &doc,std::string klass);
         MultinomialModel();
     private:

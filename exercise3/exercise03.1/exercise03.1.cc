@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
     auto trainDataFile = std::ifstream(trainDataPath);
     std::cout << trainDataPath << std::endl;
     auto dictionary = Dictionary();
-    auto classifier = MultinomialClassifier(&dictionary);
+    auto classifier = MultinomialClassifier();
     
 
     int i = 1;

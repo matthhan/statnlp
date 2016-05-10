@@ -10,11 +10,10 @@ class MultinomialClassifier {
     public:
         void trainOnDocument(Document &doc);
         std::string classify(Document &doc);
-        MultinomialClassifier(Dictionary* dic);
+        MultinomialClassifier();
     private:
         ClassCounter classCounter;
         MultinomialModel model;
-        Dictionary* dictionary;
         double getProbabilityOfClass(std::string klass,Document &doc);
 };
 #endif

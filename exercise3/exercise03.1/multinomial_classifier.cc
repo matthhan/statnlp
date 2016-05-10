@@ -2,11 +2,9 @@
 int argmax(std::vector<double> inp);
 void MultinomialClassifier::trainOnDocument(Document &doc) {
     this->classCounter.addToCount(doc.realClass);
-    this->model.updateFrequencies(doc,*(this->dictionary));
+    this->model.updateFrequencies(doc);
 }
-MultinomialClassifier::MultinomialClassifier(Dictionary* dictionary) {
-    this->dictionary = dictionary;
-}
+MultinomialClassifier::MultinomialClassifier() {}
 std::string MultinomialClassifier::classify(Document &doc) {
     auto classes = classCounter.getVectorOfClasses();
     auto probabilities = std::vector<double>();
