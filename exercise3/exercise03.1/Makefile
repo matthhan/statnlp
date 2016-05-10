@@ -1,6 +1,6 @@
 #Compiler binary
 CXX=g++
-CXXFLAGS=-Wall -O2 -std=c++11
+CXXFLAGS=-Wall -std=c++11 -O2 
 DONTLINKFLAG=-c
 FINALRESULTNAME= program.out
 
@@ -9,8 +9,8 @@ SRCS= $(wildcard *.cc)
 OBJS= $(SRCS:.cc=.o)
 
 #Makes the final project by linking together all oject files. 
-program.out: exercise03.1.o
-	$(CXX) $(CXXFLAGS) $(OBJS)
+finalresult: exercise03.1.o
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $(FINALRESULTNAME)
 exercise03.1.o: exercise03.1.cc multinomial_classifier.o dictionary.o document.o
 	$(CXX) $(CXXFLAGS) $(DONTLINKFLAG) $*.cc
 multinomial_classifier.o: multinomial_classifier.cc multinomial_classifier.hh dictionary.o class_counter.o multinomial_model.o document.o 
