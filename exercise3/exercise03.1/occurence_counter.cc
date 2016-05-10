@@ -2,8 +2,17 @@
 #include <utility>
 #include <iostream>
 #include <algorithm>
-OccurenceCounter::OccurenceCounter() {this->counts = std::map<int,int>();}
-void OccurenceCounter::addToCount(int index) {this->counts[index]++;}
+OccurenceCounter::OccurenceCounter() {
+    this->counts = std::map<int,int>();
+    this->eventsTotal = 0;
+}
+void OccurenceCounter::addToCount(int index) {
+    this->addToCount(index,1);
+}
+void OccurenceCounter::addToCount(int index,int amount) {
+    this->counts[index]+=amount;
+    this-> eventsTotal += amount;
+}
 int OccurenceCounter::getCount(int index) {return this->counts[index];}
 //Plan: Dump the map into a vector of key-value-pairs.
 //Than sort this vector by value element.
@@ -30,4 +39,7 @@ std::vector<std::pair<int,int>> OccurenceCounter::getNMostFrequent(int n) {
        it++;
     }
     return result;
+}
+double OccurenceCounter::getProbability(int word) {
+    return (this->getCount(word)/this->eventsTotal);
 }

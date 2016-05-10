@@ -7,10 +7,13 @@
 class OccurenceCounter {
     public:
         void addToCount(int index);
+        void addToCount(int index,int amount);
         int getCount(int index);
+        double getProbability(int word);
         std::vector<std::pair<int,int>> getNMostFrequent(int n);
         OccurenceCounter();
     private:
         std::map<int,int> counts;
+        unsigned int eventsTotal;
 };
 #endif
