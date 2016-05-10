@@ -34,4 +34,7 @@
 
 #vim undofiles
 *~
+#OS X Filesystem junk
 .DS_Store
+#vim swapfiles
+*.swp
