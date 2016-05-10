@@ -1,20 +1,29 @@
 #include <iostream>
-#include <unistd.h>
-#include <ctype.h>
 #include <vector>
 #include <fstream>
 #include <string>
+#include <map>
+
 #include <cstdlib>
+#include <ctype.h>
+#include <unistd.h>
 
 #include "multinomial_classifier.hh"
 #include "dictionary.hh"
+
+//Forward declarations
 void printUsage();
-std::string readLine(std::ifstream& stream) {std::string s;std::getline(stream,s); return s;}
-bool canReadMore(std::ifstream& stream) {return !stream.eof();}
+std::map<std::string,std::string> parseCLIParams(int argc,char* argv[]);
+void validateParams(std::map<std::string,std::string> params);
+std::string readLine(std::ifstream& stream);
+bool canReadMore(std::ifstream& stream);
+
 int main(int argc, char* argv[]) {
-    std::string trainDataPath = "20news/20news.tr";
-    std::string testDataPath = "20news/20news.te";
-    std::string vocabPath = "20news/20news.voc";
+    auto params = parseCLIParams(argc,argv);
+    validateParams(params);
+    std::string trainDataPath = params["trainDataPath"];
+    std::string testDataPath = params["testDataPath"];
+    std::string vocabPath = params["vocabPath"];
 
     auto trainDataFile = std::ifstream(trainDataPath);
     auto dictionary = Dictionary();
@@ -35,34 +44,44 @@ int main(int argc, char* argv[]) {
         testDataConsidered++;
         if(classifier.classify(doc) == doc.realClass) classifiedCorrectly++;
     }
-    /*
-    //TODO:Make up new parameter names
-    //Handle Arguments
+}
+
+std::map<std::string,std::string> parseCLIParams(int argc,char* argv[]) {
+    auto params = std::map<std::string,std::string>();
     int c;
-    int n = -1;
-    char* filename = NULL;
-    while((c = getopt(argc,argv,"n:f:")) != -1) {
+    while((c = getopt(argc,argv,"r:t:v:")) != -1) {
         switch (c) {
-            case 'n':
-               n=atoi(optarg);
+            case 'r':
+               params["trainDataPath"] = optarg;
                break;
-               case 'f':
-               filename =optarg;
+           case 't':
+               params["testDataPath"] = optarg;
+               break;
+           case 'v':
+               params["vocabPath"] = optarg;
                break;
            case '?':
                printUsage();
-               exit(0);
+               exit(1);
            default:
-               exit(0);
+               printUsage();
+               exit(1);
         } 
     }
-    if(n<1 || filename== NULL) {printUsage();exit(0);}*/
+    return params;
+}
+void validateParams(std::map<std::string,std::string> params) {
+    if((params["trainDataPath"] == "") || 
+            (params["testDataPath"] == "") || 
+            (params["vocabPath"] == "") ) {
+        printUsage();
+        exit(1);
+    }
 }
 void printUsage() {
-    //TODO: Change in accordance with new parameters
-    /*
-    std::cout << "Usage: <program> -f <filename> -n <number of words>" << std::endl
-        << "File must be formatted such that every line contains exactly one word" << std::endl
-        << "and everything is lowercase" << std::endl;
-        */
+    std::cout << "Usage: <program> -r <file-with-training-data> -t <file-with-test-data> -v <file-with-vocabulary>" << std::endl;
 }
+std::string readLine(std::ifstream& stream) {
+    std::string s;std::getline(stream,s); return s;
+}
+bool canReadMore(std::ifstream& stream) {return !stream.eof();}
