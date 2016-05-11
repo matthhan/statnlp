@@ -1,6 +1,4 @@
 #include "multinomial_model.hh"
-double multinomialCoefficient(Document &doc);
-unsigned long long factorial(int  n);
 void MultinomialModel::updateFrequencies(Document &doc) {
     std::string klass = doc.realClass;
     for(auto indexFrequencyTuple:doc.contentFrequencies) {
@@ -14,43 +12,35 @@ MultinomialModel::MultinomialModel() {
     this->classConditionalProbabilities = 
         std::map<std::string,OccurenceCounter>();
 }
-double MultinomialModel::getClassConditionalProbability(Document &doc,
+double MultinomialModel::getClassConditionalLogProbability(Document &doc,
         std::string klass) {
-    //TODO gets too close to 0 too fast
-    //Use the model for the class that we are interested in
-    //auto& classSpecificModel = ;
-    double countVectorProbability = 1;
-    //compute the probability for a document that contains these words
+    double countVectorLogProbability = 0;
+    //compute the log probability for a document that contains these words
     for(auto tupl:doc.contentFrequencies) {
         int word = tupl.first;
         int count = tupl.second;
-        std::cout << countVectorProbability << std::endl;
-        countVectorProbability *= 
-            std::pow(this->classConditionalProbabilities[klass].getProbability(word),count);
+        countVectorLogProbability += 
+            std::log(this->classConditionalProbabilities[klass].getProbability(word))*count;
     }
-    //multiply with multinomial coefficient
-    //return multinomialCoefficient(doc) * countVectorProbability;
-    return countVectorProbability;
+    return countVectorLogProbability; //+ logMultinomialCoefficient(doc);
 }
-double multinomialCoefficient(Document &doc) {
-    //TODO: This part is kinda buggy, because the numbers 
-    //for multinomial coefficients just become too big after a while
+//apparently multinomial coefficient not necessary
+/*double logFactorial(int n) {
+    auto res = 0;
+    for(int i = 0; i < n;i++) res += std::log(n);
+    return res;
+}
+double logMultinomialCoefficient(Document &doc) {
     int documentLength = 0;
-    auto frequencies = std::vector<long long>();
+    auto frequencies = std::vector<int>();
     for(auto tupl:doc.contentFrequencies) {
-        long long frequency = tupl.second;
+        int frequency = tupl.second;
         documentLength += frequency; 
         frequencies.push_back(frequency);
     }
-    long double productOfFrequencyFactorials = 1;
-    for(long long frequency:frequencies) {
-        //std::cout << productOfFrequencyFactorials << std::endl;
-        //std::cout<< "freq: " << frequency << ":"<< factorial(frequency) << std::endl;
-        productOfFrequencyFactorials *= (long double)factorial(frequency);
+    double sumOfFrequencyLogFactorials = 0;
+    for(int frequency:frequencies) {
+        sumOfFrequencyLogFactorials += logFactorial(frequency);
     }
-    return factorial(documentLength)/productOfFrequencyFactorials;
-}
-unsigned long long factorial(int n) {
-    if(n==0) return 1;
-    else return n*factorial(n-1);
-}
+    return logFactorial(documentLength)-sumOfFrequencyLogFactorials;
+}*/

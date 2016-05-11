@@ -2,6 +2,7 @@
 #include "class_counter.hh"
 #include "dictionary.hh"
 #include "multinomial_model.hh"
+#include <cmath>
 #ifndef MULTINOMIAL_CLASSIFIER_HH
 #define MULTINOMIAL_CLASSIFIER_HH
 
@@ -14,6 +15,6 @@ class MultinomialClassifier {
     private:
         ClassCounter classCounter;
         MultinomialModel model;
-        double getProbabilityOfClass(std::string klass,Document &doc);
+        double getLogProbabilityOfClass(std::string klass,Document &doc);
 };
 #endif

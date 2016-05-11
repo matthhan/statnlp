@@ -45,20 +45,25 @@ int main(int argc, char* argv[]) {
     auto testDataFile = std::ifstream(testDataPath);
     int testDataConsidered = 0;
     int classifiedCorrectly = 0;
+    int rejections = 0;
 
     std::cout << "Classifying: " << std::endl;
     while(canReadMore(testDataFile)) {
+        if(testDataConsidered % 100 == 0) std::cout << testDataConsidered << ", " << std::flush;
         std::string w = readLine(testDataFile);
         Document doc = Document::parseFromLine(w,dictionary);
         testDataConsidered++;
         auto res = classifier.classify(doc);
-        //std::cout << res << std::endl;
         if(res == doc.realClass) classifiedCorrectly++;
+        if(res == "REJECT") rejections++;
     }
+    std::cout << std::endl;
     double percentageClassifiedCorrectly = 
         (double)classifiedCorrectly/(double)testDataConsidered;
     std::cout << "Percentage classified correctly: " << 
         percentageClassifiedCorrectly << std::endl;
+    std::cout << "Percentage rejected: " << 
+        (double)rejections/(double) testDataConsidered << std::endl;
 }
 
 std::map<std::string,std::string> parseCLIParams(int argc,char* argv[]) {

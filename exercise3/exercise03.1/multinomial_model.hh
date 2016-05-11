@@ -10,7 +10,7 @@
 class MultinomialModel {
     public:
         void updateFrequencies(Document &doc);
-        double getClassConditionalProbability(Document &doc,std::string klass);
+        double getClassConditionalLogProbability(Document &doc,std::string klass);
         MultinomialModel();
     private:
         std::map<std::string,OccurenceCounter> classConditionalProbabilities;
