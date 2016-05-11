@@ -26,25 +26,26 @@ int main(int argc, char* argv[]) {
     std::string trainDataPath = params["trainDataPath"];
     std::string testDataPath = params["testDataPath"];
     std::string vocabPath = params["vocabPath"];
-
+    bool quiet = params["q"] == "true";
     //If a vocabulary path was specified, insert the vocabulary
     //into the dictionary and prevent further changes to the dictionary.
     auto dictionary = Dictionary();
+    if(!quiet) std::cout << "Built the Dictionary." << std::endl;
     if(vocabPath != "") buildVocabulary(dictionary,vocabPath);
 
     //Train the Model
     auto classifier = MultinomialClassifier();
     auto trainDataFile = std::ifstream(trainDataPath);
     int i = 1;
-    std::cout << "Reading training data." << std::endl;
+    if(!quiet) std::cout << "Reading training data." << std::endl;
     while(canReadMore(trainDataFile)) {
-        if((i%1000) == 0)std::cout << "" << i << ", " << std::flush;
+        if(!quiet && (i%1000) == 0)std::cout << "" << i << ", " << std::flush;
         i++;
         std::string w = readLine(trainDataFile);
         Document doc = Document::parseFromLine(w,dictionary);
         classifier.trainOnDocument(doc);
     }
-    std::cout << std::endl << "Finished Training Model." << std::endl;
+    if(!quiet) std::cout << std::endl << "Finished Training Model." << std::endl;
     trainDataFile.close();
 
     //Test the model
@@ -52,9 +53,9 @@ int main(int argc, char* argv[]) {
     int testDataConsidered = 0;
     int classifiedCorrectly = 0;
     int rejections = 0;
-    std::cout << "Classifying. " << std::endl;
+    if(!quiet) std::cout << "Classifying. " << std::endl;
     while(canReadMore(testDataFile)) {
-        if(testDataConsidered % 1000 == 0) std::cout << testDataConsidered << ", " << std::flush;
+        if(!quiet && testDataConsidered % 1000 == 0) std::cout << testDataConsidered << ", " << std::flush;
         std::string w = readLine(testDataFile);
         Document doc = Document::parseFromLine(w,dictionary);
         testDataConsidered++;
@@ -63,12 +64,12 @@ int main(int argc, char* argv[]) {
         if(res == "REJECT") rejections++;
     }
     testDataFile.close();
-    std::cout << std::endl;
+    if(!quiet)std::cout << std::endl;
     double percentageClassifiedCorrectly = 
         (double)classifiedCorrectly/(double)testDataConsidered;
-    std::cout << "Percentage classified correctly: " << 
-        percentageClassifiedCorrectly << std::endl;
-    std::cout << "Percentage rejected: " << 
+    if(!quiet)std::cout << "Percentage classified correctly: " << std::endl;
+    std::cout << percentageClassifiedCorrectly << std::endl;
+    if(!quiet) std::cout << "Percentage rejected: " << 
         (double)rejections/(double) testDataConsidered << std::endl;
 
 }
@@ -76,7 +77,8 @@ int main(int argc, char* argv[]) {
 std::map<std::string,std::string> parseCLIParams(int argc,char* argv[]) {
     auto params = std::map<std::string,std::string>();
     int c;
-    while((c = getopt(argc,argv,"r:t:v:")) != -1) {
+    params["q"] = "false";
+    while((c = getopt(argc,argv,"r:t:v:q")) != -1) {
         switch (c) {
             case 'r':
                params["trainDataPath"] = optarg;
@@ -86,6 +88,9 @@ std::map<std::string,std::string> parseCLIParams(int argc,char* argv[]) {
                break;
            case 'v':
                params["vocabPath"] = optarg;
+               break;
+           case 'q':
+               params["q"] = "true";
                break;
            case '?':
                printUsage();
@@ -110,6 +115,7 @@ void validateParams(std::map<std::string,std::string> params) {
 }
 void printUsage() {
     std::cout << "Usage: <program> -r <file-with-training-data> -t <file-with-test-data> -v <file-with-vocabulary>" << std::endl;
+    std::cout << "-q: silence all output except classification accuracy" << std::endl;
 }
 std::string readLine(std::ifstream& stream) {
     std::string s;std::getline(stream,s); return s;
@@ -125,5 +131,4 @@ void buildVocabulary(Dictionary &dict,std::string vocabPath) {
     }
     dict.makeImmutable();
     vocabFile.close();
-    std::cout << "Built the Dictionary." << std::endl;
 }
