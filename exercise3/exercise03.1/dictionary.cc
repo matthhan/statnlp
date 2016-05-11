@@ -1,11 +1,13 @@
 #include "dictionary.hh"
 Dictionary::Dictionary(void) {
    this->content = std::vector<Word>(this->HASH_TABLE_SIZE);
+   this->immutable = false;
 }
 Word Dictionary::getWordForIndex(int index) {
     return this->content[index];
 }
 int Dictionary::insert(Word w) {
+    if(this->immutable) return this->getIndexForWord(w);
     int insertAt = this->hash(w);
     //Insert word
     if(this->content[insertAt].empty()) {this->content[insertAt] = w;return insertAt;}
@@ -32,7 +34,9 @@ int Dictionary::insert(Word w) {
 }
 int Dictionary::getIndexForWord(Word w) {
     int shouldBeAt = hash(w);
-    if(foundAt(w,shouldBeAt) == shouldBeAt) return shouldBeAt;
+    int returnValue = foundAt(w,shouldBeAt);
+    if(returnValue == shouldBeAt) return shouldBeAt;
+    else if(returnValue == -1) return -1;
     else {
         int originalHashValue = shouldBeAt;
         while(1) {
@@ -57,6 +61,9 @@ int Dictionary::foundAt(Word w, int index) {
 }
 int Dictionary::probe(int index) {
     return (index + 1) % this->HASH_TABLE_SIZE;
+}
+void Dictionary::makeImmutable() {
+    this->immutable = true;
 }
 /*int main() {
     std::vector<Word> testWords = std::vector<Word>(10);

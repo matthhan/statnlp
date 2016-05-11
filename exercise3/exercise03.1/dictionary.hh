@@ -12,6 +12,7 @@ class Dictionary {
         Word getWordForIndex(int index);
         int contains(Word w);
         Dictionary();
+        void makeImmutable();
     private:
         static const size_t HASH_TABLE_SIZE = 10000000;
         std::vector<Word> content;
@@ -19,5 +20,6 @@ class Dictionary {
         int hash(Word);
         int foundAt(Word w, int index);
         int probe(int index);
+        bool immutable;
 };
 #endif
