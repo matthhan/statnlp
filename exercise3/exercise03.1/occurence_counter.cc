@@ -10,7 +10,7 @@ void OccurenceCounter::addToCount(int index) {
     this->addToCount(index,1);
 }
 void OccurenceCounter::addToCount(int index,int amount) {
-    this->counts[index]+=amount;
+    this->counts[index] += amount;
     this-> eventsTotal += amount;
 }
 int OccurenceCounter::getCount(int index) {return this->counts[index];}
@@ -41,5 +41,6 @@ std::vector<std::pair<int,int>> OccurenceCounter::getNMostFrequent(int n) {
     return result;
 }
 double OccurenceCounter::getProbability(int word) {
-    return (this->getCount(word)/this->eventsTotal);
+    return ((double)this->getCount(word)/(double)this->eventsTotal);
 }
+

@@ -1,4 +1,5 @@
 #include "multinomial_classifier.hh"
+#include <iostream>
 int argmax(std::vector<double> inp);
 void MultinomialClassifier::trainOnDocument(Document &doc) {
     this->classCounter.addToCount(doc.realClass);
@@ -11,13 +12,18 @@ std::string MultinomialClassifier::classify(Document &doc) {
     for(auto klass:classes) {
         probabilities.push_back(getProbabilityOfClass(klass,doc));
     }
+    //for(auto prob: probabilities) {std::cout << prob<<std::flush;}
     return classes[argmax(probabilities)];
 }
 double MultinomialClassifier::getProbabilityOfClass(std::string klass,Document &doc) {
-    return this->classCounter.relativeFrequency(klass) *
+    //second one has weird values of these are relatively close to 0
+    double res = this->classCounter.relativeFrequency(klass) *
            this->model.getClassConditionalProbability(doc,klass);
+    //std::cout << res <<std::endl;
+    return res;
 }
 int argmax(std::vector<double> inp) {
+
     int res = -1;
     double max = -1 * std::numeric_limits<double>::max();
     for( int i = 0; i < inp.size();i++) {

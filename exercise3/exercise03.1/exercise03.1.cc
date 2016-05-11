@@ -26,7 +26,6 @@ int main(int argc, char* argv[]) {
     std::string vocabPath = params["vocabPath"];
 
     auto trainDataFile = std::ifstream(trainDataPath);
-    std::cout << trainDataPath << std::endl;
     auto dictionary = Dictionary();
     auto classifier = MultinomialClassifier();
     
@@ -43,16 +42,23 @@ int main(int argc, char* argv[]) {
     std::cout << std::endl << "Finished Training Model" << std::endl;
     trainDataFile.close();
 
-    /*auto testDataFile = std::ifstream(testDataPath);
+    auto testDataFile = std::ifstream(testDataPath);
     int testDataConsidered = 0;
     int classifiedCorrectly = 0;
 
+    std::cout << "Classifying: " << std::endl;
     while(canReadMore(testDataFile)) {
-        std::string w = readLine(trainDataFile);
+        std::string w = readLine(testDataFile);
         Document doc = Document::parseFromLine(w,dictionary);
         testDataConsidered++;
-        if(classifier.classify(doc) == doc.realClass) classifiedCorrectly++;
-    }*/
+        auto res = classifier.classify(doc);
+        //std::cout << res << std::endl;
+        if(res == doc.realClass) classifiedCorrectly++;
+    }
+    double percentageClassifiedCorrectly = 
+        (double)classifiedCorrectly/(double)testDataConsidered;
+    std::cout << "Percentage classified correctly: " << 
+        percentageClassifiedCorrectly << std::endl;
 }
 
 std::map<std::string,std::string> parseCLIParams(int argc,char* argv[]) {

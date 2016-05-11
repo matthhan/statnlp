@@ -2,6 +2,7 @@
 #include "document.hh"
 #include "occurence_counter.hh"
 #include <map>
+#include <string>
 #include <cmath>
 #ifndef MULTINOMIAL_MODEL_HH
 #define MULTINOMIAL_MODEL_HH
