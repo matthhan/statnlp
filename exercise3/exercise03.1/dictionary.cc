@@ -2,6 +2,7 @@
 Dictionary::Dictionary(void) {
    this->content = std::vector<Word>(this->HASH_TABLE_SIZE);
    this->immutable = false;
+   this->m_size = 0;
 }
 Word Dictionary::getWordForIndex(int index) {
     return this->content[index];
@@ -10,7 +11,7 @@ int Dictionary::insert(Word w) {
     if(this->immutable) return this->getIndexForWord(w);
     int insertAt = this->hash(w);
     //Insert word
-    if(this->content[insertAt].empty()) {this->content[insertAt] = w;return insertAt;}
+    if(this->content[insertAt].empty()) {this->content[insertAt] = w;this->m_size++;return insertAt;}
     //Word is already in HashTable
     else if(this->content[insertAt] == w) return insertAt;
     //Need to handle collision
@@ -21,6 +22,7 @@ int Dictionary::insert(Word w) {
            int res = foundAt(w,insertAt);
            if(res == -1) {
                 this->content[insertAt] = w;
+                this->m_size++;
                 return insertAt;
            } else if(res == insertAt) return insertAt;
            if(insertAt == originalHashValue) {
@@ -64,6 +66,9 @@ int Dictionary::probe(int index) {
 }
 void Dictionary::makeImmutable() {
     this->immutable = true;
+}
+int Dictionary::size() {
+    return this->m_size;
 }
 /*int main() {
     std::vector<Word> testWords = std::vector<Word>(10);

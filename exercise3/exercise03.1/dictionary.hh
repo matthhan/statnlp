@@ -11,6 +11,7 @@ class Dictionary {
         int getIndexForWord(Word w);
         Word getWordForIndex(int index);
         int contains(Word w);
+        int size();
         Dictionary();
         void makeImmutable();
     private:
@@ -21,5 +22,6 @@ class Dictionary {
         int foundAt(Word w, int index);
         int probe(int index);
         bool immutable;
+        int m_size;
 };
 #endif

@@ -11,8 +11,11 @@ class MultinomialModel {
     public:
         void updateFrequencies(Document &doc);
         double getClassConditionalLogProbability(Document &doc,std::string klass);
+        void enableSmoothing(Dictionary* dictionary);
         MultinomialModel();
     private:
         std::map<std::string,OccurenceCounter> classConditionalProbabilities;
+        bool smoothed;
+        Dictionary* dictionary;
 };
 #endif

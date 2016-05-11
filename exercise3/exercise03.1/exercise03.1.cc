@@ -27,6 +27,7 @@ int main(int argc, char* argv[]) {
     std::string testDataPath = params["testDataPath"];
     std::string vocabPath = params["vocabPath"];
     bool quiet = params["q"] == "true";
+    bool smoothed = params["s"] == "true";
     //If a vocabulary path was specified, insert the vocabulary
     //into the dictionary and prevent further changes to the dictionary.
     auto dictionary = Dictionary();
@@ -35,6 +36,7 @@ int main(int argc, char* argv[]) {
 
     //Train the Model
     auto classifier = MultinomialClassifier();
+    if(smoothed) classifier.enableSmoothing(&dictionary);
     auto trainDataFile = std::ifstream(trainDataPath);
     int i = 1;
     if(!quiet) std::cout << "Reading training data." << std::endl;
@@ -70,7 +72,7 @@ int main(int argc, char* argv[]) {
         (double)rejections/(double) testDataConsidered;
     if(!quiet) {
         std::cout << std::endl; 
-        std::cout << "Percentage classified correctly: " << std::endl;
+        std::cout << "Percentage classified correctly: " << percentageClassifiedCorrectly << std::endl;
         std::cout << "Percentage rejected: " << percentageRejected << std::endl;
     }
     if(quiet) {
@@ -84,7 +86,8 @@ std::map<std::string,std::string> parseCLIParams(int argc,char* argv[]) {
     auto params = std::map<std::string,std::string>();
     int c;
     params["q"] = "false";
-    while((c = getopt(argc,argv,"r:t:v:q")) != -1) {
+    params["s"] = "false";
+    while((c = getopt(argc,argv,"r:t:v:qs")) != -1) {
         switch (c) {
             case 'r':
                params["trainDataPath"] = optarg;
@@ -97,6 +100,9 @@ std::map<std::string,std::string> parseCLIParams(int argc,char* argv[]) {
                break;
            case 'q':
                params["q"] = "true";
+               break;
+           case 's':
+               params["s"] = "true";
                break;
            case '?':
                printUsage();
@@ -122,6 +128,7 @@ void validateParams(std::map<std::string,std::string> params) {
 void printUsage() {
     std::cout << "Usage: <program> -r <file-with-training-data> -t <file-with-test-data> -v <file-with-vocabulary>" << std::endl;
     std::cout << "-q: silence all output except classification accuracy" << std::endl;
+    std::cout << "-s: use simple smoothing" << std::endl;
 }
 std::string readLine(std::ifstream& stream) {
     std::string s;std::getline(stream,s); return s;

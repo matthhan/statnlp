@@ -12,6 +12,7 @@ class MultinomialClassifier {
         void trainOnDocument(Document &doc);
         std::string classify(Document &doc);
         MultinomialClassifier();
+        void enableSmoothing(Dictionary* dictionary);
     private:
         ClassCounter classCounter;
         MultinomialModel model;

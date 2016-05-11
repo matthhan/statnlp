@@ -10,6 +10,7 @@ class OccurenceCounter {
         void addToCount(int index,int amount);
         int getCount(int index);
         double getProbability(int word);
+        double getSmoothedProbability(int word,int dictionary_size);
         std::vector<std::pair<int,int>> getNMostFrequent(int n);
         OccurenceCounter();
     private:

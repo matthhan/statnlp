@@ -11,6 +11,8 @@ void MultinomialModel::updateFrequencies(Document &doc) {
 MultinomialModel::MultinomialModel() {
     this->classConditionalProbabilities = 
         std::map<std::string,OccurenceCounter>();
+    this->smoothed =false;
+    this->dictionary = 0;
 }
 double MultinomialModel::getClassConditionalLogProbability(Document &doc,
         std::string klass) {
@@ -19,10 +21,16 @@ double MultinomialModel::getClassConditionalLogProbability(Document &doc,
     for(auto tupl:doc.contentFrequencies) {
         int word = tupl.first;
         int count = tupl.second;
-        countVectorLogProbability += 
-            std::log(this->classConditionalProbabilities[klass].getProbability(word))*count;
+        double probability;
+        if(!this->smoothed) probability = this->classConditionalProbabilities[klass].getProbability(word);
+        else probability = this->classConditionalProbabilities[klass].getSmoothedProbability(word,this->dictionary->size());
+        countVectorLogProbability += std::log(probability)*count;
     }
     return countVectorLogProbability; //+ logMultinomialCoefficient(doc);
+}
+void MultinomialModel::enableSmoothing(Dictionary* dictionary) {
+    this->smoothed = true;
+    this->dictionary = dictionary;
 }
 //apparently multinomial coefficient not necessary
 /*double logFactorial(int n) {

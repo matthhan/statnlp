@@ -43,4 +43,10 @@ std::vector<std::pair<int,int>> OccurenceCounter::getNMostFrequent(int n) {
 double OccurenceCounter::getProbability(int word) {
     return ((double)this->getCount(word)/(double)this->eventsTotal);
 }
+double OccurenceCounter::getSmoothedProbability(int word,int dictionary_size) {
+    double count = this->getCount(word);
+    if(count == 0) count = 1;
+    double normalize_over = this->eventsTotal + (dictionary_size-this->counts.size());
+    return count/normalize_over;
+}
 

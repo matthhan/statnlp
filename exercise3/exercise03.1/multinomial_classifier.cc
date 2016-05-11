@@ -33,3 +33,6 @@ int argmax(std::vector<double> inp) {
     }
     return res;
 }
+void MultinomialClassifier::enableSmoothing(Dictionary* dictionary) {
+    this->model.enableSmoothing(dictionary);
+}
