@@ -64,13 +64,19 @@ int main(int argc, char* argv[]) {
         if(res == "REJECT") rejections++;
     }
     testDataFile.close();
-    if(!quiet)std::cout << std::endl;
     double percentageClassifiedCorrectly = 
         (double)classifiedCorrectly/(double)testDataConsidered;
-    if(!quiet)std::cout << "Percentage classified correctly: " << std::endl;
-    std::cout << percentageClassifiedCorrectly << std::endl;
-    if(!quiet) std::cout << "Percentage rejected: " << 
-        (double)rejections/(double) testDataConsidered << std::endl;
+    double percentageRejected =
+        (double)rejections/(double) testDataConsidered;
+    if(!quiet) {
+        std::cout << std::endl; 
+        std::cout << "Percentage classified correctly: " << std::endl;
+        std::cout << "Percentage rejected: " << percentageRejected << std::endl;
+    }
+    if(quiet) {
+        std::cout << percentageClassifiedCorrectly << 
+            "," << percentageRejected << std::endl;
+    }
 
 }
 

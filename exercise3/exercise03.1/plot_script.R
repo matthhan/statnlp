@@ -1,0 +1,5 @@
+res <- read.csv("result.csv")
+library(ggplot2)
+library(reshape2)
+molten <- melt(res,id.vars = "vocabulary_size")
+ggplot(molten,aes(vocabulary_size,value,color=variable)) + geom_line() + ylab("")
