@@ -11,7 +11,7 @@ OBJS= $(SRCS:.cc=.o)
 #Makes the final project by linking together all oject files. 
 finalresult: exercise03.1.o
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $(FINALRESULTNAME)
-exercise03.1.o: exercise03.1.cc multinomial_classifier.o dictionary.o document.o
+exercise03.1.o: exercise03.1.cc multinomial_classifier.o dictionary.o document.o confusion_matrix.o
 	$(CXX) $(CXXFLAGS) $(DONTLINKFLAG) $*.cc
 multinomial_classifier.o: multinomial_classifier.cc multinomial_classifier.hh dictionary.o class_counter.o multinomial_model.o document.o 
 	$(CXX) $(CXXFLAGS) $(DONTLINKFLAG) $*.cc

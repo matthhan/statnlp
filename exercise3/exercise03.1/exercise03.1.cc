@@ -10,6 +10,7 @@
 
 #include "multinomial_classifier.hh"
 #include "dictionary.hh"
+#include "confusion_matrix.hh"
 
 //Forward declarations
 void printUsage();
@@ -52,6 +53,7 @@ int main(int argc, char* argv[]) {
 
     //Test the model
     auto testDataFile = std::ifstream(testDataPath);
+    auto confusionMatrix = ConfusionMatrix();
     int testDataConsidered = 0;
     int classifiedCorrectly = 0;
     int rejections = 0;
@@ -64,6 +66,7 @@ int main(int argc, char* argv[]) {
         auto res = classifier.classify(doc);
         if(res == doc.realClass) classifiedCorrectly++;
         if(res == "REJECT") rejections++;
+        confusionMatrix.insert(doc.realClass,res);
     }
     testDataFile.close();
     double percentageClassifiedCorrectly = 
@@ -74,6 +77,8 @@ int main(int argc, char* argv[]) {
         std::cout << std::endl; 
         std::cout << "Percentage classified correctly: " << percentageClassifiedCorrectly << std::endl;
         std::cout << "Percentage rejected: " << percentageRejected << std::endl;
+        std::cout << "Confusion Matrix:" << std::endl;
+        std::cout << confusionMatrix.toString() << std::endl;
     }
     if(quiet) {
         std::cout << percentageClassifiedCorrectly << 
