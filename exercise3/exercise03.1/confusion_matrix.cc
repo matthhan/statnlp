@@ -30,3 +30,28 @@ ConfusionMatrix::ConfusionMatrix() {
     this->confusionCounts = std::map<std::pair<std::string,std::string>,int>();
     this->classesEncountered = std::set<std::string>();
 }
+int ConfusionMatrix::numberClassificationsTotal() {
+    int sum = 0;
+    for(auto tupl:this->confusionCounts) {
+        sum += tupl.second;
+    }
+    return sum;
+}
+double ConfusionMatrix::percentageClassifiedCorrectly() {
+    int correctlyClassified = 0;
+    for(auto tupl:this->confusionCounts) {
+        if(tupl.first.first == tupl.first.second) {
+           correctlyClassified += tupl.second; 
+        }
+    }
+    return (double) correctlyClassified / (double) this->numberClassificationsTotal();
+}
+double ConfusionMatrix::percentageRejected() {
+    int rejected = 0;
+    for(auto tupl:this->confusionCounts) {
+        if(tupl.first.second == "REJECT") {
+           rejected += tupl.second; 
+        }
+    }
+    return (double) rejected / (double) this->numberClassificationsTotal();
+}

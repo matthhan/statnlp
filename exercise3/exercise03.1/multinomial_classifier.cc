@@ -1,6 +1,4 @@
 #include "multinomial_classifier.hh"
-#include <iostream>
-#include <limits>
 int argmax(std::vector<double> inp);
 void MultinomialClassifier::trainOnDocument(Document &doc) {
     this->classCounter.addToCount(doc.realClass);

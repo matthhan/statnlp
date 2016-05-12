@@ -29,6 +29,8 @@ int main(int argc, char* argv[]) {
     std::string vocabPath = params["vocabPath"];
     bool quiet = params["q"] == "true";
     bool smoothed = params["s"] == "true";
+    bool outputConfusionMatrix = params["c"] == "true";
+    bool outputPercentages = params["p"] == "true";
     //If a vocabulary path was specified, insert the vocabulary
     //into the dictionary and prevent further changes to the dictionary.
     auto dictionary = Dictionary();
@@ -55,8 +57,6 @@ int main(int argc, char* argv[]) {
     auto testDataFile = std::ifstream(testDataPath);
     auto confusionMatrix = ConfusionMatrix();
     int testDataConsidered = 0;
-    int classifiedCorrectly = 0;
-    int rejections = 0;
     if(!quiet) std::cout << "Classifying. " << std::endl;
     while(canReadMore(testDataFile)) {
         if(!quiet && testDataConsidered % 1000 == 0) std::cout << testDataConsidered << ", " << std::flush;
@@ -64,27 +64,19 @@ int main(int argc, char* argv[]) {
         Document doc = Document::parseFromLine(w,dictionary);
         testDataConsidered++;
         auto res = classifier.classify(doc);
-        if(res == doc.realClass) classifiedCorrectly++;
-        if(res == "REJECT") rejections++;
         confusionMatrix.insert(doc.realClass,res);
     }
     testDataFile.close();
-    double percentageClassifiedCorrectly = 
-        (double)classifiedCorrectly/(double)testDataConsidered;
-    double percentageRejected =
-        (double)rejections/(double) testDataConsidered;
+    double percentageClassifiedCorrectly = confusionMatrix.percentageClassifiedCorrectly();
+    double percentageRejected = confusionMatrix.percentageRejected();
     if(!quiet) {
         std::cout << std::endl; 
         std::cout << "Percentage classified correctly: " << percentageClassifiedCorrectly << std::endl;
         std::cout << "Percentage rejected: " << percentageRejected << std::endl;
         std::cout << "Confusion Matrix:" << std::endl;
-        std::cout << confusionMatrix.toString() << std::endl;
     }
-    if(quiet) {
-        std::cout << percentageClassifiedCorrectly << 
-            "," << percentageRejected << std::endl;
-    }
-
+    if(outputPercentages) std::cout << percentageClassifiedCorrectly << "," << percentageRejected << std::endl;
+    if(outputConfusionMatrix) std::cout << confusionMatrix.toString() << std::endl;
 }
 
 std::map<std::string,std::string> parseCLIParams(int argc,char* argv[]) {
@@ -92,7 +84,9 @@ std::map<std::string,std::string> parseCLIParams(int argc,char* argv[]) {
     int c;
     params["q"] = "false";
     params["s"] = "false";
-    while((c = getopt(argc,argv,"r:t:v:qs")) != -1) {
+    params["c"] = "false";
+    params["p"] = "false";
+    while((c = getopt(argc,argv,"r:t:v:qscp")) != -1) {
         switch (c) {
             case 'r':
                params["trainDataPath"] = optarg;
@@ -108,6 +102,12 @@ std::map<std::string,std::string> parseCLIParams(int argc,char* argv[]) {
                break;
            case 's':
                params["s"] = "true";
+               break;
+           case 'c':
+               params["c"] = "true";
+               break;
+           case 'p':
+               params["p"] = "true";
                break;
            case '?':
                printUsage();
@@ -132,8 +132,10 @@ void validateParams(std::map<std::string,std::string> params) {
 }
 void printUsage() {
     std::cout << "Usage: <program> -r <file-with-training-data> -t <file-with-test-data> -v <file-with-vocabulary>" << std::endl;
-    std::cout << "-q: silence all output except classification accuracy" << std::endl;
+    std::cout << "-q: suppress default outputs" << std::endl;
     std::cout << "-s: use simple smoothing" << std::endl;
+    std::cout << "-c: output a confusion matrix" << std::endl;
+    std::cout << "-p: output percentages correctly classified and rejected in simple, comma separated form" << std::endl;
 }
 std::string readLine(std::ifstream& stream) {
     std::string s;std::getline(stream,s); return s;

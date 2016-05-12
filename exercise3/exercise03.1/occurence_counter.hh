@@ -3,6 +3,7 @@
 #include <map>
 #include <vector>
 #include <utility>
+#include <algorithm>
 
 class OccurenceCounter {
     public:

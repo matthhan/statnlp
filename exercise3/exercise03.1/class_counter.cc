@@ -1,5 +1,4 @@
 #include "class_counter.hh"
-#include <iostream>
 void ClassCounter::addToCount(std::string className) {
     this->counts[className]++;
     this->totalCount++;

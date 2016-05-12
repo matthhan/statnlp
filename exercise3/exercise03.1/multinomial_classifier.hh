@@ -3,6 +3,7 @@
 #include "dictionary.hh"
 #include "multinomial_model.hh"
 #include <cmath>
+#include <limits>
 #ifndef MULTINOMIAL_CLASSIFIER_HH
 #define MULTINOMIAL_CLASSIFIER_HH
 

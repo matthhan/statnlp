@@ -1,7 +1,4 @@
 #include "occurence_counter.hh"
-#include <utility>
-#include <iostream>
-#include <algorithm>
 OccurenceCounter::OccurenceCounter() {
     this->counts = std::map<int,int>();
     this->eventsTotal = 0;
