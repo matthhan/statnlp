@@ -1,5 +1,5 @@
 #!/bin/bash
-
+mkdir temp;
 #unsmoothed
 (echo "vocabulary_size,classifier_accuracy,rejections"
 #High resolution for small vocabulary sizes
