@@ -7,7 +7,7 @@ void ConfusionMatrix::insert(std::string realClass,std::string foundClass) {
 std::string ConfusionMatrix::toString() {
     this->classesEncountered.erase("");
     std::string newline = "\n";
-    std::string res = "true_class/classifier_output";
+    std::string res = "trueClass/classifierOutput";
     //Make header row of table
     for(auto klass:this->classesEncountered) res = (res + "," + klass);
     res = res + ",REJECT" + newline;

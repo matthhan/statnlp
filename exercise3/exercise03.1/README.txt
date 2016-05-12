@@ -52,5 +52,3 @@ word frequencies respectively.
 
 Finally, we wrote a class ConfusionMatrix, which keeps track of the results
 of classification and can display it in a nice form.
------------------------ANSWERS TO QUESTIONS-----------------------------
-
