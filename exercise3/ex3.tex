@@ -132,4 +132,67 @@ In the smoothed case, most documents are classified correctly, as shown by the h
 
 See Code. The classifier achieves a classification accuracy of roughly 90\%
 
+\section*{Task 2}
+For $N = 0$, we get that
+\begin{equation*}
+	p(0) = \sum_{w_1^0}p(w_1^0\$) = p(\$)
+\end{equation*}
+with the assumption that there is a unique string of length 0 ($\varepsilon$).\par
+For $N > 1$ we get
+\begin{align*}
+	p(N) = \sum_{w_1^N} p(w_1^N\$) &= \sum_{w_1^N} \bigg(\prod_{i=1}^N p(w_i|h_i)\bigg) \cdot p(\$) \\
+	&= p(\$) \cdot \sum_w \sum_{w_1^N\colon w_N = w} \bigg(\prod_{i=1}^{N-1} p(w_i|h_i)\bigg) \cdot p(w|h_N) \\
+	&= p(\$) \cdot \sum_w \sum_{w_1^{N-1}} \bigg(\prod_{i=1}^{N-1} p(w_i|h_i)\bigg) \cdot p(w|h_N) \\
+	&= p(\$) \cdot \sum_{w_1^{N-1}} \sum_w \bigg(\prod_{i=1}^{N-1} p(w_i|h_i)\bigg) \cdot p(w|h_N) \\
+	&= p(\$) \cdot \sum_{w_1^{N-1}} \bigg(\prod_{i=1}^{N-1} p(w_i|h_i)\bigg) \cdot (\sum_w p(w|h_N)) \\
+	&= \sum_{w_1^{N-1}} \bigg(\prod_{i=1}^{N-1} p(w_i|h_i)\bigg) \cdot p(\$) \cdot (1 - p(\$)) \\
+	&= p(N-1) \cdot (1 - p(\$))
+\end{align*}
+and thus
+\begin{equation*}
+	p(N) = (1 - p(\$))^N \cdot p(\$)
+\end{equation*}
+This distribution is normalized as
+\begin{equation*}
+	\sum_N p(N) = \sum_N (1 - p(\$))^N \cdot p(\$) = p(\$) \cdot \sum_N (1 - p(\$))^N = p(\$) \cdot \frac{1}{1 - (1 - p(\$))} =1
+\end{equation*}
+\section*{Task 3}
+From the slides we have the log likelihood function
+\begin{equation*}
+	F(\{\lambda_h\}) = \sum_h \bigg[N_1(h,\cdot)\cdot\text{log}(\lambda_h) + (N(h,\cdot) - N_1(h, \cdot))\cdot \text{log}(1 - \lambda_h)\bigg]
+\end{equation*}
+We can do independent optimization for each $h$ as there is no dependence between parameters. So for a single $\lambda_h$ we need to maximize
+\begin{equation*}
+	\hat{F}(\lambda_h) = N_1(h,\cdot)\cdot\text{log}(\lambda_h) + (N(h,\cdot) - N_1(h, \cdot))\cdot \text{log}(1 - \lambda_h)
+\end{equation*}
+which after multiplying with the constant $\frac{1}{N(h,\cdot)}$is equivalent to maximizing
+\begin{equation*}
+	\tilde{F}(\lambda_h) = \frac{N_1(h,\cdot)}{N(h,\cdot)}\cdot\text{log}(\lambda_h) + (1 - \frac{N_1(h,\cdot)}{N(h,\cdot)})\cdot \text{log}(1 - \lambda_h)
+\end{equation*}
+Now $\frac{N_1(h,\cdot)}{N(h,\cdot)}$ and $1 - \frac{N_1(h,\cdot)}{N(h,\cdot)}$ form a probability distribution $p_k$, and using the divergence inequality
+\begin{equation*}
+	\sum_k p_k \cdot\text{log}(q_k) \leq \sum_k p_k \cdot\text{log} (p_k)
+\end{equation*}
+with $q_k = \{\lambda_h, 1 - \lambda_h\}$ we see that the optimal estimate is 
+\begin{equation*}
+	\lambda_h = \frac{N_1(h,\cdot)}{N(h,\cdot)}
+\end{equation*}
+\section*{Task 4}
+Again we start with the log likelihood function
+\begin{align*}
+	F(\{\lambda_h\}) &= \sum_h \bigg[N_1(h,\cdot)\cdot\text{log}(\lambda_h) + (N(h,\cdot) - N_1(h, \cdot))\cdot \text{log}(1 - \lambda_h)\bigg] \\
+	&= \sum_N \sum_{h\colon N(h,\cdot) = N} \bigg[N_1(h,\cdot)\cdot\text{log}(\lambda_N) + (N(h,\cdot) - N_1(h, \cdot))\cdot \text{log}(1 - \lambda_N)\bigg] 
+\end{align*}
+We can do independent optimization for each $N$ as there is no dependence between parameters for different counts. So for a single $N$ we need to maximize
+\begin{equation*}
+	\hat{F}(\lambda_N) = \sum_{h\colon N(h,\cdot) = N} \bigg[N_1(h,\cdot)\cdot\text{log}(\lambda_N) + (N(h,\cdot) - N_1(h, \cdot))\cdot \text{log}(1 - \lambda_N)\bigg] 
+\end{equation*}
+which after multiplying with the constant $\frac{1}{\sum_{h\colon N(h,\cdot) = N}N(h,\cdot)}$is equivalent to maximizing
+\begin{equation*}
+	\tilde{F}(\lambda_N) = \frac{\sum_{h\colon N(h,\cdot) = N}N_1(h,\cdot)}{\sum_{h\colon N(h,\cdot) = N}N(h,\cdot)}\cdot\text{log}(\lambda_N) + (1 - \frac{\sum_{h\colon N(h,\cdot) = N}N_1(h,\cdot)}{\sum_{h\colon N(h,\cdot) = N}N(h,\cdot)})\cdot \text{log}(1 - \lambda_N)
+\end{equation*}
+We again use divergence inequality like in task 3 and find that the optimal estimate is
+\begin{equation*}
+	\lambda_N = \lambda_{N(h,\cdot)} = \frac{\sum_{h\colon N(h,\cdot) = N}N_1(h,\cdot)}{\sum_{h\colon N(h,\cdot) = N}N(h,\cdot)}
+\end{equation*}
 \end{document}
