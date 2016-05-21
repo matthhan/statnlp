@@ -42,8 +42,8 @@ double OccurenceCounter::getProbability(int word) {
 }
 double OccurenceCounter::getSmoothedProbability(int word,int dictionary_size) {
     double count = this->getCount(word);
-    if(count == 0) count = 1;
-    double normalize_over = this->eventsTotal + (dictionary_size-this->counts.size());
+    count++;
+    double normalize_over = this->eventsTotal + dictionary_size;
     return count/normalize_over;
 }
 
