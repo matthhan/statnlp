@@ -73,10 +73,11 @@ int main(int argc, char* argv[]) {
         std::cout << std::endl; 
         std::cout << "Percentage classified correctly: " << percentageClassifiedCorrectly << std::endl;
         std::cout << "Percentage rejected: " << percentageRejected << std::endl;
-        std::cout << "Confusion Matrix:" << std::endl;
     }
     if(outputPercentages) std::cout << percentageClassifiedCorrectly << "," << percentageRejected << std::endl;
-    if(outputConfusionMatrix) std::cout << confusionMatrix.toString() << std::endl;
+    if(outputConfusionMatrix) { 
+        std::cout << confusionMatrix.toString() << std::endl;
+    }
 }
 
 std::map<std::string,std::string> parseCLIParams(int argc,char* argv[]) {
