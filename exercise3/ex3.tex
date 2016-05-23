@@ -69,21 +69,21 @@ As we can see, the error rate shows this behavior because too many Documents are
 To solve this problem, we propose to use a simple smoothing method.
 Originally, the class conditional probabilities of words are defined as follows:
 
-$p(w|c) = \frac{N_{w,c}}{N_c}$
+$p(w|c) = \frac{N_{w,c}}{N_{\textunderscore,c}}$
 
-However, the problem was that $N_{w,c}$ was zero frequently. To solve this, we replace the cases in which it was zero by one.
+However, the problem was that $N_{w,c}$ was zero frequently. To solve this, we simply add 1 to the occurence frequency of every word.
 
-$p(w|c) = \begin{cases} 
-    p(w|c) = \frac{1}{N_c} & \text{if } N_{w,c} = 0\\
-    p(w|c) = \frac{N_{w,c}}{N_c} & \text{otherwise}\\
-\end{cases}$
+$p(w|c) = \frac{N_{w,c}+1}{N_{\textunderscore,c}}$
 
-However, in this solution, the probabilites do not add up to 1, which is a problem. To fix this, we introduce a ``count count'' $N_0 := |\{w|N_{w,c} = 0\}|$. And write the probability as follows.
+However, in this solution, the probabilites do not add up to 1, which is a problem. To fix this, we add the vocabulary size W into the normalizing factor.
 
-$p(w|c) = \begin{cases} 
-    p(w|c) = \frac{1}{N_c + N_0} & \text{if } N_{w,c} = 0\\
-    p(w|c) = \frac{N_{w,c}}{N_c + N_0} & \text{otherwise}\\
-\end{cases}$
+$p(w|c) = \frac{N_{w,c}+1}{N_{\textunderscore,c}+W}$
+
+We show that now this adds up to 1:
+
+$\displaystyle\sum_w p(w|c) = \displaystyle\sum_w \frac{N_{w,c}+1}{N_{\textunderscore,c}+W} = \frac{W}{N_{\textunderscore,c}+W} + \displaystyle\sum_w \frac{N_{w,c}}{N_{\textunderscore,c}+W} = \frac{W}{N_{\textunderscore,c}+W} + \frac{N_{\textunderscore,w}}{N_{\textunderscore,c}+W} = 1$
+
+(The penultimate step is possible because the probabilities previously added up to 1)
 
 Now that we have solved this problem, the accuracy is much better, especially for bigger vocabularies:
 
