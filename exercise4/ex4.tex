@@ -1,0 +1,74 @@
+%% Dokumentenklasse (Koma Script) -----------------------------------------
+\documentclass[%
+   11pt,              % Schriftgroesse
+   ngerman,           % wird an andere Pakete weitergereicht
+   a4paper,           % Seitengroesse
+   DIV11,             % Textbereichsgroesse (siehe Koma Skript Dokumentation !)
+]{scrartcl}%     Klassen: scrartcl, scrreprt, scrbook
+% -------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc} % Font Encoding, benoetigt fuer Umlaute
+\usepackage[ngerman]{babel}   % Spracheinstellung
+
+\usepackage[T1]{fontenc} % T1 Schrift Encoding
+\usepackage{textcomp}    % Zusatzliche Symbole (Text Companion font extension)
+\usepackage{lmodern}     % Latin Modern Schrift
+\usepackage{listings}
+\usepackage{framed}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{framed}
+\usepackage{listings}
+%für die Konfusionsmatrizen
+\usepackage{csvsimple}
+\usepackage{lscape}
+
+
+\usepackage[left=2cm,right=3cm,top=2cm,bottom=2cm,includeheadfoot]{geometry}
+%Kopf- und Fußzeile
+\usepackage{fancyhdr}
+%Grafiken einbetten
+\usepackage{graphicx}
+
+\pagestyle{fancy}
+\fancyhf{}
+%Übungsteilnehmer
+\fancyhead[L]{Matthias Hansen, 331600~~Lukas Huwald, 322890\\}
+%Kopfzeile mittig
+\fancyhead[R]{NLP Exercise04}
+%Linie oben
+\renewcommand{\headrulewidth}{0.5pt}
+
+\setlength{\parskip}{1ex}
+
+%Fußzeile links bzw. innen
+\fancyfoot[L]{}
+%Fußzeile rechts bzw. außen
+\fancyfoot[R]{\thepage}
+%Linie unten
+\renewcommand{\footrulewidth}{0.5pt}
+%% Dokument Beginn %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\section*{Task 1}
+\section*{Task 2}
+For the Turing good estimates, we have
+\begin{equation*}
+	\sum_{h,w}p(h,w) = \sum_{r=0}^R p_r\cdot n_r
+\end{equation*}
+where $p_R$ is some value $0\leq p_R \leq 1$ estimated indepently and the leaving one out estimates for the other $p_r$ are
+\begin{equation*}
+	p_r = \frac{(1-n_R p_R) (r+1)n_{r+1}}{N\cdot n_r}
+\end{equation*}
+We find
+\begin{align*}
+	\sum_{r=0}^R p_r\cdot n_r &= n_R\cdot p_R + \sum_{r=0}^{R-1} \frac{(1-n_R p_R) (r+1)n_{r+1}}{N\cdot n_r} \cdot n_r \\
+	&= n_R\cdot p_R + \sum_{r=0}^{R-1} \frac{(1-n_R p_R) (r+1)n_{r+1}}{N} \\
+	&= n_R\cdot p_R + \frac{1-n_R p_R}{N} \cdot \sum_{r=0}^{R-1} (r+1)n_{r+1} \\
+	&= n_R\cdot p_R + \frac{1-n_R p_R}{N} \cdot \sum_{r=1}^{R} r\cdot n_r \\
+	&= n_R\cdot p_R + \frac{1-n_R p_R}{N} \cdot N \\
+	&= n_R\cdot p_R + 1-n_R p_R\\
+	&= 1
+\end{align*}
+\section*{Task 3}
+\section*{Task 4}
+\end{document}
