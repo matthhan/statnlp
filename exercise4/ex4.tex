@@ -70,5 +70,19 @@ We find
 	&= 1
 \end{align*}
 \section*{Task 3}
+Assume we have classes $c_1,\ldots,c_i,\ldots c_C$.
+The formula is 
+\begin{equation*}
+	p(w|v) = \sum_{i=1}^C \sum_{j=1}^C p(w|c_i) \cdot p(c_i|c_j) \cdot p(c_j|v)
+\end{equation*}
+For the derivation, we use the standard notation $p(X=x)$ for the probability that random variable $X$ has value $x$, instead of the short form notation $p(x)$. We use the random variables $X_1$ for the word $w$ and $X_2$ for history $v$. We also use $C_1$ for the class of the word and $C_2$ for the class of the history. At the steps marked $(*)$ in the derivation we use the independence assumption from the task (the distributions do not depend on other variables).
+\begin{align*}
+	p(X_1 = w | X_2 = v) &= \sum_{i=1}^C p(X_1 = w, C_1 = c_i | X_2 = v) \\
+	&= \sum_{i=1}^C p(X_1 = w|C_1 = c_i, X_2 = v) \cdot p(C_1 = c_i| X_2 = v) \\
+	&\overset{(*)}{=} \sum_{i=1}^C p(X_1 = w|C_1 = c_i) \cdot p(C_1 = c_i| X_2 = v) \\
+	&= \sum_{i=1}^C \sum_{j=1}^C p(X_1 = w|C_1 = c_i) \cdot p(C_1 = c_i, C_2 = c_j| X_2 = v) \\
+	&= \sum_{i=1}^C \sum_{j=1}^C p(X_1 = w|C_1 = c_i) \cdot p(C_1 = c_i| C_2 = c_j, X_2 = v) \cdot p(C_2 = c_j | X_2 = v) \\
+	&\overset{(*)}{=} \sum_{i=1}^C \sum_{j=1}^C p(X_1 = w|C_1 = c_i) \cdot p(C_1 = c_i| C_2 = c_j) \cdot p(C_2 = c_j | X_2 = v)
+\end{align*}
 \section*{Task 4}
 \end{document}
