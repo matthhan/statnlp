@@ -1,0 +1,103 @@
+digraph trigram_model  {
+    ε  -> A [label=A];
+    ε  -> B [label=B];
+    ε  -> C [label=C];
+    ε  -> D [label=D];
+
+    A -> "(A,A)" [label=A];
+    A -> "(A,B)" [label=B];
+    A -> "(A,C)" [label=C];
+    A -> "(A,D)" [label=D];
+    B -> "(B,A)" [label=A];
+    B -> "(B,B)" [label=B];
+    B -> "(B,C)" [label=C];
+    B -> "(B,D)" [label=D];
+    C -> "(C,A)" [label=A];
+    C -> "(C,B)" [label=B];
+    C -> "(C,C)" [label=C];
+    C -> "(C,D)" [label=D];
+    D -> "(D,A)" [label=A];
+    D -> "(D,B)" [label=B];
+    D -> "(D,C)" [label=C];
+    D -> "(D,D)" [label=D];
+
+    "(A,A)" -> "(A,A)" [label=A];
+    "(B,A)" -> "(A,A)" [label=A];
+    "(C,A)" -> "(A,A)" [label=A];
+    "(D,A)" -> "(A,A)" [label=A];
+
+    "(A,A)" -> "(A,B)" [label=B];
+    "(B,A)" -> "(A,B)" [label=B];
+    "(C,A)" -> "(A,B)" [label=B];
+    "(D,A)" -> "(A,B)" [label=B];
+
+    "(A,A)" -> "(A,C)" [label=C];
+    "(B,A)" -> "(A,C)" [label=C];
+    "(C,A)" -> "(A,C)" [label=C];
+    "(D,A)" -> "(A,C)" [label=C];
+
+    "(A,A)" -> "(A,D)" [label=D];
+    "(B,A)" -> "(A,D)" [label=D];
+    "(C,A)" -> "(A,D)" [label=D];
+    "(D,A)" -> "(A,D)" [label=D];
+
+    "(A,B)" -> "(B,A)" [label=A];
+    "(B,B)" -> "(B,A)" [label=A];
+    "(C,B)" -> "(B,A)" [label=A];
+    "(D,B)" -> "(B,A)" [label=A];
+
+    "(A,B)" -> "(B,B)" [label=B];
+    "(B,B)" -> "(B,B)" [label=B];
+    "(C,B)" -> "(B,B)" [label=B];
+    "(D,B)" -> "(B,B)" [label=B];
+
+    "(A,B)" -> "(B,C)" [label=C];
+    "(B,B)" -> "(B,C)" [label=C];
+    "(C,B)" -> "(B,C)" [label=C];
+    "(D,B)" -> "(B,C)" [label=C];
+
+    "(A,B)" -> "(B,D)" [label=D];
+    "(B,B)" -> "(B,D)" [label=D];
+    "(C,B)" -> "(B,D)" [label=D];
+    "(D,B)" -> "(B,D)" [label=D];
+
+    "(A,C)" -> "(C,A)" [label=A];
+    "(B,C)" -> "(C,A)" [label=A];
+    "(C,C)" -> "(C,A)" [label=A];
+    "(D,C)" -> "(C,A)" [label=A];
+
+    "(A,C)" -> "(C,B)" [label=B];
+    "(B,C)" -> "(C,B)" [label=B];
+    "(C,C)" -> "(C,B)" [label=B];
+    "(D,C)" -> "(C,B)" [label=B];
+
+    "(A,C)" -> "(C,C)" [label=C];
+    "(B,C)" -> "(C,C)" [label=C];
+    "(C,C)" -> "(C,C)" [label=C];
+    "(D,C)" -> "(C,C)" [label=C];
+
+    "(A,C)" -> "(C,D)" [label=D];
+    "(B,C)" -> "(C,D)" [label=D];
+    "(C,C)" -> "(C,D)" [label=D];
+    "(D,C)" -> "(C,D)" [label=D];
+
+    "(A,D)" -> "(D,A)" [label=A];
+    "(B,D)" -> "(D,A)" [label=A];
+    "(C,D)" -> "(D,A)" [label=A];
+    "(D,D)" -> "(D,A)" [label=A];
+
+    "(A,D)" -> "(D,B)" [label=B];
+    "(B,D)" -> "(D,B)" [label=B];
+    "(C,D)" -> "(D,B)" [label=B];
+    "(D,D)" -> "(D,B)" [label=B];
+
+    "(A,D)" -> "(D,C)" [label=C];
+    "(B,D)" -> "(D,C)" [label=C];
+    "(C,D)" -> "(D,C)" [label=C];
+    "(D,D)" -> "(D,C)" [label=C];
+
+    "(A,D)" -> "(D,D)" [label=D];
+    "(B,D)" -> "(D,D)" [label=D];
+    "(C,D)" -> "(D,D)" [label=D];
+    "(D,D)" -> "(D,D)" [label=D];
+}
