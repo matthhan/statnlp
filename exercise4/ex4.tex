@@ -58,19 +58,29 @@ A finite state machine for the trigram language model should have a state for ea
     \item One artifical ``sentence end state'' \$ that is reached only at the end of the sentence, if this is desired in the model.
 \end{itemize}
 
-Apart from the states, there should also be transitions. We denote a transition by a tuple ((Start state,Word read),End state).
+Apart from the states, there should also be transitions. We denote a transition by a tuple ((Start state,Word read),End state). Please note that a state can itself be a tuple. E.g. a Transition from state (A,B) to (B,C) when the word C is read is written as $(((A,B),C),(B,C))$. Similarly, a transition from state A into state (A,B) when the word B is read can be written as $((A,B),(A,B))$. 
+
+This notation is consistent with defining a function as a set of pairs, where the left hand side of each pair is mapped to the right hand side. Thus the set of transitions forms the transition function of the FSM.
+
 \begin{itemize}
-    \item Transitions from the start state to each history with exactly one word: $\{((\varepsilon,x),x)| x\in\{A,B,C,D\}\}$
+    \item Transitions from the start state to each history with exactly one word: 
+
+    $\{((\varepsilon,x),x)| x\in\{A,B,C,D\}\}$
     \item Transitions from the one-word histories to the two-word histories:
+
     $\{((x,y),(x,y)) | x,y\in \{A,B,C,D\}\}$
-    \item Transitions from the two word histories to the possible following two word histories: $\{(((x,y),z), (y,z)) | x,y,z \in \{A,B,C,D\} \}$
-    \item If an end state is desired, then there should also be transitions from each state to the end state: $\{((S,\$),\$) | S \in \{\epsilon\} \cup \{A,B,C,D\}\cup \{A,B,C,D\}^2\}$
+    \item Transitions from the two word histories to the possible following two word histories:
+    $\{(((x,y),z), (y,z)) | x,y,z \in \{A,B,C,D\} \}$
+    \item If an end state is desired, then there should also be transitions from each state to the end state: 
+
+    $\{((S,\$),\$) | S \in \{\epsilon\} \cup \{A,B,C,D\}\cup \{A,B,C,D\}^2\}$
 \end{itemize}
 
 Finally, there should be a function that assigns a probability to each transition, i.e. a function 
-$p: states \mapsto [0,1] : p(t) = p((s,r),e) = p(s|r)$
+$p: states \mapsto [0,1] : p(t) = p(((x,y),z),(y,z)) = p(x,y,z)$
 
-And the values of this function are the parameters of the model. 
+The values of this function are the parameters of the model. 
+
 \section*{Task 2}
 For the Turing good estimates, we have
 \begin{equation*}
@@ -106,4 +116,41 @@ For the derivation, we use the standard notation $p(X=x)$ for the probability th
 	&\overset{(*)}{=} \sum_{i=1}^C \sum_{j=1}^C p(X_1 = w|C_1 = c_i) \cdot p(C_1 = c_i| C_2 = c_j) \cdot p(C_2 = c_j | X_2 = v)
 \end{align*}
 \section*{Task 4}
+To implement a trigram model, one needs to be able to save a data structure that allows computation of the probability for any given trigram. If the number of observed trigrams is saved, then the probability of a given trigram can be computed from its observed frequency. Therefore, it suffices to find a data structure that allows for determining the number of occurences of a given trigram.
+
+We also assume from the first exercise that a data structure mapping words to indexes already exists. In the following, we therefore assume that trigrams are given in the form of triples of unsigned 4-byte integers. This has the additional benefit that the trigrams have a ``natural'' lexicographic ordering which can be used in data structures. We assume that the triples can each be stored in contiguous memory, so that the size of the triple is 12 bytes.
+
+From the given data, we also observe that 
+\begin{itemize}
+    \item Most possible trigrams do not occur in the data at all.
+    \item Of those trigrams that occur more than once, almost all occur less than 256 times.
+\end{itemize}
+
+To account for this, we use two data structures:
+
+\begin{enumerate}
+    \item A Map data structure, which maps every trigram seen at least once to a count between 1 and 255, or alternatively a special symbol for trigrams seen more than 255 times (this special symbol could e.g. be the 0 byte).
+    \item Another Map data structure, which maps every trigram seen more than 255 times to its count.
+\end{enumerate}
+
+To determine the probability of a trigram, one would search for its count in the first data structure and then, if the special symbol is encountered, search for it in the second data structure.
+
+Each of these data structures then needs to be implemented:
+
+We propose to implement the initial set as a balanced binary search tree (e.g. an AVL tree, which allows for most algorithms in logarithmic time) storing the triples along with a char (i.e. an unsigned 8 bit integer) representing the count of the triple. 
+
+Storage size is then $(13 \text{Byte} + 2*p\text{Byte}) * n$ where p is the size of a pointer (typically 8 byte) and n is the number of trigrams. 
+
+In the biggest example from the exercise sheet, storage size of this AVL tree would thus be 
+$11359575 \cdot (13\text{Byte}+ 2*8\text{Byte}) \approx 329 \text{Megabyte}$
+
+This memory size is trivial, even on consumer hardware.
+
+For the second level of the data structure, we propose to use another AVL tree that only stores counts for triple that occured more than 256 times. Since this tree contains far fewer triples and counts, counts can easily be represented by 16-bit unsigned integers, which should be sufficient.
+
+Even for the biggest case in the exercise sheet, we get a memory usage of roughly 251 Kilobyte for this data structure (Using a calculation similar to the one above).    
+
+Crucially, both of these data structures allow for access in logarithmic time. Thus the time and memory characteristics of the data structures should be sufficient for that application.
+
+
 \end{document}
