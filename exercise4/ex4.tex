@@ -50,6 +50,27 @@
 %% Dokument Beginn %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \section*{Task 1}
+A finite state machine for the trigram language model should have a state for each possible history. Therefore, there should be states
+\begin{itemize}
+    \item $\varepsilon$, for the beginning of a sentence this is the starting state of the FSM.
+    \item x for all $x \in \{A,B,C,D\}$ that are reached after the first word has been read.
+    \item x for all $x \in \{A,B,C,D\}^2$ that correspond to the two last read words. I.e. if the previous two words were A and D, then the FSM is in state $(A,D)$.
+    \item One artifical ``sentence end state'' \$ that is reached only at the end of the sentence, if this is desired in the model.
+\end{itemize}
+
+Apart from the states, there should also be transitions. We denote a transition by a tuple ((Start state,Word read),End state).
+\begin{itemize}
+    \item Transitions from the start state to each history with exactly one word: $\{((\varepsilon,x),x)| x\in\{A,B,C,D\}\}$
+    \item Transitions from the one-word histories to the two-word histories:
+    $\{((x,y),(x,y)) | x,y\in \{A,B,C,D\}\}$
+    \item Transitions from the two word histories to the possible following two word histories: $\{(((x,y),z), (y,z)) | x,y,z \in \{A,B,C,D\} \}$
+    \item If an end state is desired, then there should also be transitions from each state to the end state: $\{((S,\$),\$) | S \in \{\epsilon\} \cup \{A,B,C,D\}\cup \{A,B,C,D\}^2\}$
+\end{itemize}
+
+Finally, there should be a function that assigns a probability to each transition, i.e. a function 
+$p: states \mapsto [0,1] : p(t) = p((s,r),e) = p(s|r)$
+
+And the values of this function are the parameters of the model. 
 \section*{Task 2}
 For the Turing good estimates, we have
 \begin{equation*}
