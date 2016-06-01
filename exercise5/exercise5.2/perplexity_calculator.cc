@@ -24,14 +24,17 @@ int main(int argc,char* argv[]) {
     while(canReadMore(dataFile)) {
         string line = readLine(dataFile);
         for(auto st:splitAt(line,' ')) {
+            if (st=="") break;
             Word w = dict.getWordForString(st);
             sumLogProbabilities += lm.logProbability(w);
             N++;
-            cout << N << ", "<< endl;
+            if(N%1000000==0) cout << N << ", "<< endl;
         }
     }
-    double logPerplexity = -(1/N) * sumLogProbabilities;
+    double logPerplexity = -(1.0/(double)N) * sumLogProbabilities;
     double perplexity = pow(10,logPerplexity);
+    cout << "sumLogProbabilities: " << sumLogProbabilities << endl;
+    cout << "logPerplexity: " << logPerplexity << endl;
     cout << "Perplexity: " << perplexity << endl;
     return 0;
 }

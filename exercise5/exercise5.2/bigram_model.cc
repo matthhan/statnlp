@@ -54,17 +54,11 @@ void BigramModel::readUnigramModel(ifstream& stream) {
         double prob = pow(10,stod(unigram[0]));
         string stringRead = unigram[1];
         Word word = this->dict->insert(stringRead);
-        if(word == this->dict->getWordForString("</s>")) unigram[2] = "1337";
+        if(word == this->dict->getWordForString("</s>")) unigram.push_back("1");
         double backoffWeight = pow(10,stod(unigram[2]));
 
-        cout << "inserting  at " << word << endl;
         auto p = make_pair(prob,backoffWeight);
-        cout << "The pair (" << p.first << ", " << p.second << ")" << endl;
-        cout << "Max size" << this->fallbackUnigramModel.max_size() << endl;
-        cout << "size" << this->fallbackUnigramModel.size() << endl;
-        cout << "Reading " << this->fallbackUnigramModel[word].first << endl;
         this->fallbackUnigramModel[word] = p;
-        cout << "inserted" << endl;
     }
 }
 void BigramModel::readBigramModel(ifstream& stream) { 

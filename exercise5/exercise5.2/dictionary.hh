@@ -6,7 +6,6 @@
 #include <string>
 using std::vector;
 using std::string;
-using std::hash;
 
 class Dictionary {
     public:
@@ -20,7 +19,7 @@ class Dictionary {
     private:
         static const size_t HASH_TABLE_SIZE = 10000000;
         vector<string> content;
-        hash<string> hash_fn;
+        std::hash<string> hash_fn = std::hash<string>();
         int hash(string);
         int foundAt(string w, Word index);
         int probe(int index);
