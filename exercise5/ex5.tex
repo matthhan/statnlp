@@ -1,0 +1,114 @@
+%% Dokumentenklasse (Koma Script) -----------------------------------------
+\documentclass[%
+   11pt,              % Schriftgroesse
+   ngerman,           % wird an andere Pakete weitergereicht
+   a4paper,           % Seitengroesse
+   DIV11,             % Textbereichsgroesse (siehe Koma Skript Dokumentation !)
+]{scrartcl}%     Klassen: scrartcl, scrreprt, scrbook
+% -------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc} % Font Encoding, benoetigt fuer Umlaute
+\usepackage[ngerman]{babel}   % Spracheinstellung
+
+\usepackage[T1]{fontenc} % T1 Schrift Encoding
+\usepackage{textcomp}    % Zusatzliche Symbole (Text Companion font extension)
+\usepackage{lmodern}     % Latin Modern Schrift
+\usepackage{listings}
+\usepackage{framed}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{framed}
+\usepackage{listings}
+%für die Konfusionsmatrizen
+\usepackage{csvsimple}
+\usepackage{lscape}
+
+
+\usepackage[left=2cm,right=3cm,top=2cm,bottom=2cm,includeheadfoot]{geometry}
+%Kopf- und Fußzeile
+\usepackage{fancyhdr}
+%Grafiken einbetten
+\usepackage{graphicx}
+
+\pagestyle{fancy}
+\fancyhf{}
+%Übungsteilnehmer
+\fancyhead[L]{Matthias Hansen, 331600~~Lukas Huwald, 322890\\}
+%Kopfzeile mittig
+\fancyhead[R]{NLP Exercise05}
+%Linie oben
+\renewcommand{\headrulewidth}{0.5pt}
+
+\setlength{\parskip}{1ex}
+
+%Fußzeile links bzw. innen
+\fancyfoot[L]{}
+%Fußzeile rechts bzw. außen
+\fancyfoot[R]{\thepage}
+%Linie unten
+\renewcommand{\footrulewidth}{0.5pt}
+%% Dokument Beginn %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\section*{Task 1}
+We start with the upper bound on $b$. We have
+\begin{equation*}
+	\frac{n_1}{b} - \frac{2n_2}{1-b} = \sum_{r \geq 3}\frac{r n_r}{r - 1 - b} \geq 0
+\end{equation*}
+It follows that
+\begin{align*}
+	\frac{n_1}{b} &\geq \frac{2 n_2}{1-b} &\Rightarrow \\
+	n_1 &\geq b\cdot\frac{2n_2}{1-b} &\Rightarrow \\
+	n_1(1-b) &\geq b \cdot 2 n_2 &\Rightarrow \\
+	n_1 - b \cdot n_1 &\geq b \cdot 2 n_2 &\Rightarrow \\
+	n_1 &\geq b(2 n_2 + n_1) &\Rightarrow \\
+	b &\leq \frac{n_1}{n_1 + 2 n_2}
+\end{align*}
+Next up is the lower bound on $b$. We have
+\begin{equation*}
+	\frac{n_1}{b} = \frac{2 n_2}{1-b} + \sum_{r \geq 3}\frac{r n_r}{r - 1 - b} \leq \frac{2 n_2}{1-b} + \sum_{r \geq 3}r n_r
+\end{equation*}
+We now apply the upper bound on the $1-b$ in the denominator on the right side and obtain
+\begin{equation}\label{e1}
+	\frac{n_1}{b} \leq \frac{2 n_2}{1 - \frac{n_1}{n_1 + 2n_2}} + \sum_{r \geq 3}r n_r
+\end{equation}
+Some simplifications show
+\begin{equation*}
+	\frac{2 n_2}{1 - \frac{n_1}{n_1 + 2n_2}} = \frac{2n_2}{\frac{n_1+2n_2-n_1}{n_1+2n_2}} = \frac{2n_2}{\frac{2n_2}{n_1+2n_2}} = 2n_2 \cdot \frac{n_1+2n_2}{2n_2} = n_1 + 2n_2
+\end{equation*}
+Putting this into the above inequation (\ref{e1}) leads to
+\begin{equation*}
+	\frac{n_1}{b} \leq n_1 + 2n_2 + \sum_{r \geq 3}r n_r = N
+\end{equation*}
+So we have
+\begin{equation*}
+	\frac{n_1}{N} \leq b
+\end{equation*}
+Finally we derive the more complex lower bound on $b$. Again starting with
+\begin{equation*}
+	\frac{n_1}{b} - \frac{2n_2}{1-b} = \sum_{r \geq 3}\frac{r n_r}{r - 1 - b} 
+\end{equation*}
+we multiply with $(1-b)$ and get
+\begin{align*}
+	\frac{n_1}{b} - n_1 - 2n_2 &= \sum_{r \geq 3}\frac{1-b}{r-1-b}rn_r &\Rightarrow \\
+	b &= \frac{n_1}{n_1 + 2n_2 + \sum_{r \geq 3}\frac{1-b}{r-1-b}rn_r}
+\end{align*}
+So to derive the bound
+\begin{equation*}
+	b \geq \frac{n_1}{n_1 + 2n_2 + \frac{1}{2}(N - n_1 - 2n_2)}
+\end{equation*}
+It remains to show that
+\begin{equation}\label{e2}
+	\sum_{r \geq 3}\frac{1-b}{r-1-b}rn_r \leq \frac{1}{2}(N - n_1 - 2n_2)
+\end{equation}
+We first observe that for $r\geq3$
+\begin{equation*}
+	\frac{1-b}{r-1-b} \leq \frac{1-b}{r-1-(r-1)b} = \frac{1-b}{(r-1)(1-b)} = \frac{1}{r-1}
+\end{equation*}
+Putting this into the left hand side of (\ref{e2}), we get
+\begin{equation*}
+	\sum_{r \geq 3}\frac{1-b}{r-1-b}rn_r \leq \sum_{r \geq 3}\frac{1}{r-1}rn_r \underset{(r \geq 3)}{\leq} \sum_{r \geq 3}\frac{1}{2}rn_r = \frac{1}{2}\sum_{r \geq 3}rn_r = \frac{1}{2}(N - n_1 - 2n_2)
+\end{equation*}
+which proves (\ref{e2}) and thus the bound.
+\section*{Task 2}
+
+\end{document}
