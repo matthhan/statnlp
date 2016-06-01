@@ -39,3 +39,5 @@
 #vim swapfiles
 *.swp
 *.tgz
+#generated language models
+*.lm
