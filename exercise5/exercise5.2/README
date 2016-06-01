@@ -1,0 +1,19 @@
+a.) 
+As stated in the exercise sheet, we have downloaded and compiled the toolkit.
+
+b.) 
+We have trained a bigram model with the command given in the file createBigramModel.sh. The Output of this bigram model is to be found in the file language_model.lm. The File's format is as follows: Initally, the 1-gram and 2-gram counts are listed. 
+
+Then, for each n, there is a list of n-grams in the format that is outlined in the exercise sheet, i.e. the n-gram as well as its probability and its backoff weight are listed.
+
+c.) Our program is structured as follows: 
+
+ * Every word read is immediately inserted into a dictionary for further reference. The Dictionary class was implemented in a previous exercise.
+ * Initially, the language model file is read into an object of class bigram Model, which allows for the simple calculation of bigram probabilities and log porbabilities.
+ * Then, the log probabilities for each word in the TC-Star corpus are summed up.
+ * Finally, the log perplexity is calculated with the formula -(1/N)*sumOfLogProbabilities.
+ * Calculating the perplexity is then trivially achieved by taking (log perplexity)^10.
+
+d.) We were not quite sure how to use the SRI library from within C++ as there appears to be no documentation on the subject. Instead, we just wrote a bash script that builds a language model and calculates the perplexity using the command line tools.
+
+
