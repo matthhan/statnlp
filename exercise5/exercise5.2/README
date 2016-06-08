@@ -1,0 +1,17 @@
+Solutions to the exercise part:
+
+a.) We downloaded and compiled the toolkit.
+b.) We used the SRI toolkit to train the language model on the data. The
+command we used to do so can be found in the file make_language_model.sh.
+The final model can be found in the file language_model.lm.
+c.) We implemented a program to calculate the perplexity of the training text
+from the language model. The main function which reads the file and calculates
+perplexity is in perplexity.cc. We also used a dictionary class from a
+previous exercise and we created a BigramModel class that reads bigram models
+as specified by the SRI toolkit and allows for probability calculation.
+The program can be created with the provided Makefile and will print usage
+instructions.
+d.) Since we are not quite sure whether "the SRI library" is supposed to mean
+its C++ classes or the command line tools, we just wrote a script
+perplexity.sh that uses the command line tools to accomplish this.
+It should be used as ./perplexity.sh <text> <order>
