@@ -1,0 +1,99 @@
+%% Dokumentenklasse (Koma Script) -----------------------------------------
+\documentclass[%
+   11pt,              % Schriftgroesse
+   ngerman,           % wird an andere Pakete weitergereicht
+   a4paper,           % Seitengroesse
+   DIV11,             % Textbereichsgroesse (siehe Koma Skript Dokumentation !)
+]{scrartcl}%     Klassen: scrartcl, scrreprt, scrbook
+% -------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc} % Font Encoding, benoetigt fuer Umlaute
+\usepackage[ngerman]{babel}   % Spracheinstellung
+
+\usepackage[T1]{fontenc} % T1 Schrift Encoding
+\usepackage{textcomp}    % Zusatzliche Symbole (Text Companion font extension)
+\usepackage{lmodern}     % Latin Modern Schrift
+\usepackage{listings}
+\usepackage{framed}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{framed}
+\usepackage{listings}
+%für die Konfusionsmatrizen
+\usepackage{csvsimple}
+\usepackage{lscape}
+
+
+\usepackage[left=2cm,right=3cm,top=2cm,bottom=2cm,includeheadfoot]{geometry}
+%Kopf- und Fußzeile
+\usepackage{fancyhdr}
+%Grafiken einbetten
+\usepackage{graphicx}
+
+\pagestyle{fancy}
+\fancyhf{}
+%Übungsteilnehmer
+\fancyhead[L]{Matthias Hansen, 331600~~Lukas Huwald, 322890\\}
+%Kopfzeile mittig
+\fancyhead[R]{NLP Exercise06}
+%Linie oben
+\renewcommand{\headrulewidth}{0.5pt}
+
+\setlength{\parskip}{1ex}
+
+%Fußzeile links bzw. innen
+\fancyfoot[L]{}
+%Fußzeile rechts bzw. außen
+\fancyfoot[R]{\thepage}
+%Linie unten
+\renewcommand{\footrulewidth}{0.5pt}
+%% Dokument Beginn %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\section*{Task 1}
+\section*{Task 2}
+\section*{Task 3}
+\section*{Task 4}
+\subsection*{a)}
+We first consider finding the value of the minimum action sequence, i.e.
+\begin{equation*}
+	\underset{u_1^N}{\text{min}} \bigg(\sum_{n=1}^N h_n(u_{n-1},u_n)\bigg) = \underset{u \in U}{\text{min }} Q(u,N)
+\end{equation*}
+with the values
+\begin{equation*}
+	Q(u,I) = \underset{u_1^I, u_I = u}{\text{min}}\bigg(\sum_{n=1}^I h_n(u_{n-1},u_n)\bigg), \qquad I = 1,\ldots, N
+\end{equation*}
+The dynamic programming equation for the $Q$-values is
+\begin{equation*}
+	Q(u,I) = \underset{u' \in U}{\text{min}}\bigg(h_I(u',u) + Q(u', I-1)\bigg), \qquad I = 2,\ldots,N
+\end{equation*}
+with initial values
+\begin{equation*}
+	Q(u,1) = h_1(u)
+\end{equation*}
+(at $n=1$ there is no previous position to consider in the cost function).\par
+This is a first-order dependence (the cost of the current action depends on the predecessor action). \\
+The time requirement is $\mathcal{O}(U^2 \cdot N)$ (we fill a table of $U\cdot N$ elements, and the computation of a $Q$-value is taking the minimum of $U$ values). The memory requirement is $\mathcal{O}(U)$ if we only remember two lines of the $Q$-table in the computation (we only need the values of $Q(\cdot, i-1)$ to compute $Q(\cdot, i)$). \par
+However, the task is to find the argmin, i.e. the sequence of actions with the optimal value. For this, we also need to store the optimal action sequence that leads to each $Q$-value. One way to do this is to remember the whole $Q$-table and store with each value $Q(u,i)$ the predecessor action $u'$ chosen on the minimization for $Q(u,i)$. This way we can recover the optimal action sequence via backtracking. This raises the memory requirement to $\mathcal{O}(N \cdot U)$.
+\subsection*{b)}
+It is clear that in the optimal action sequence we never take an action of cost $\infty$. Because of this, the computation of the $Q$-values can be simplified to 
+\begin{equation*}
+	Q(u,I) = \underset{u' \in \{u-1,u,u+1\}}{\text{min}}\bigg(h_N(u',u) + Q(u', I-1)\bigg), \qquad I = 2,\ldots,N
+\end{equation*}
+with the optimal result still being
+\begin{equation*}
+	\underset{u \in U}{\text{min }} Q(u,N)
+\end{equation*}
+The dependence is still first order, as the cost of action $u$ after action $u'$ can differ depending on whether $u'$ is close to $u$.
+But the simplification lowers the time requirement to $\mathcal{O}(N \cdot U)$, as the minimization for each $Q$-value takes only constant time. The space requirement stays the same, because we still have to fill the complete $N \cdot U$ table $Q(\cdot,\cdot)$ to do the backtracking in the end.
+\subsection*{c)}
+A zero order cost function would be
+\begin{equation*}
+	h_n(u_{n-1,u_n}) = h_n(u_n)
+\end{equation*}
+i.e. the cost of taking action $u$ does not at all depend on the predecessor action. 
+In this situation, no DP is necessary, as the optimization can be done independently for each position:
+\begin{equation*}
+	u_n = \underset{u \in U}{\text{min }}h_n(u)
+\end{equation*}
+The time complexity is then $\mathcal{O}(N \cdot U)$, and there is no additional space required for the computation, so the space complexity is $\mathcal{O}(1)$.
+\end{document}
