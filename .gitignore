@@ -41,3 +41,6 @@
 *.tgz
 #generated language models
 *.lm
+
+exercise5/srilm-1.7.1
+exercise5/tc-star
