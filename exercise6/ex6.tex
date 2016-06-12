@@ -51,6 +51,31 @@
 \begin{document}
 \section*{Task 1}
 \section*{Task 2}
+\subsection*{Leaving one word out}
+We use absolute discounting with a class dependent discount parameter $b_c$. In the formulas $N(c,w)$ stands for the count of word $w$ in training documents of class $c$, and $N_0(c, \cdot)$ is the number of words that do not occur in training documents of class $c.$\\
+The probabilities $p(w|c)$ are then given by
+\begin{equation*}
+	p(w|c) = 
+	\begin{cases}
+		\frac{N(c,w) - b_c}{N(c, \cdot)} & N(c,w) > 0 \\
+		b_c \cdot \frac{W - N_0(c, \cdot)}{N(c, \cdot)} \cdot \frac{\beta(w)}{\sum_{w'}\beta(w')} & N(c,w) = 0
+	\end{cases}
+\end{equation*}
+The leaving one out likelihood function is
+\begin{align*}
+	L(\{b_c\},\{\beta(w)\}) &= \sum_{c,w: N(c,w) \geq 1}N(c,w) \cdot \log p(w|c) \\
+	&= \sum_{c,w: N(c,w) = 1}\log b_c + \log \frac{W - N_0(c, \cdot)}{N(c,\cdot) - 1} + \log \frac{\beta(w)}{\sum_{w'}\beta(w')} \\
+	&+ \sum_{c,w: N(c,w) > 1}N(c,w) \cdot \log \frac{N(c,w) - 1 - b_c}{N(c,\cdot) - 1}
+\end{align*}
+A good estimate for the fallback distribution $\beta(w)$ would be
+\begin{equation*}
+	\beta(w) = \frac{N_1(\cdot, w)}{N_1(\cdot, \cdot)}
+\end{equation*}
+using the count counts $N_1(\cdot, w) = \sum_{c: N(c,w) = 1} 1$.\\
+i.e. we count the classes in which $w$ occurs only once and renormalize this. \\
+For estimating $b_c$ there is no closed form solution.
+\subsection*{Leaving one document out}
+TODO
 \section*{Task 3}
 \section*{Task 4}
 \subsection*{a)}
