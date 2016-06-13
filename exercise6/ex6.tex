@@ -51,7 +51,14 @@
 \begin{document}
 \section*{Task 1}
 
-In the first combining method, we combine the probabilities that the language models assign to each word sequence using $\lambda$ as a weight, while in the second method we combine the probabilities at the word level instead of the sentence level.
+In the first combining method, we combine the sentences using sentence level mixtures with the mixing coefficients provided by the $\lambda$ function for the full sentence. In the second method, a word level mixture is used, which uses mixing coefficients provided by the lambda function for the sentence up to the current word.
+
+The sentence level model is more efficient because the mixing coefficients only have to be computed once for the whole sentence, instead of having to compute all of the mixing coefficients for the first $1\ldots N$ words. 
+
+The word level mixture yields a better probability only if the most appropriate language model changes mid-sentence. Consider e.g. the case where we have two language models $p_1$ and $p_2$ and a sentence $w_1^{10}$, in which the first 5 words are best modeled by $p_1$ and the second 5 words are best modeled by $p_2$. If $\lambda$ models the problem well, then $\lambda (1|w_1^5)$ should be very high and $\lambda (2|w_1^5)$ should be very low, thus reaching the best mixture for this part of the sentence. However, the sentence level mixture would only calculate the mixing weights by considering the full sentence and would therefore mix the models roughly equally.
+
+This advantage of the word level mixtures is predicated on the assumption that the best language model changes mid-sentence. Since sets of bigram models are usually used in NLP for modeling different topics and we can assume that topics do not usually change mid-sentence, the advantage is quite small.
+
 
 \section*{Task 2}
 \subsection*{Leaving one word out}
