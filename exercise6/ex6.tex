@@ -84,8 +84,6 @@ A good estimate for the fallback distribution $\beta(w)$ would be
 using the count counts $N_1(\cdot, w) = \sum_{c: N(c,w) = 1} 1$.\\
 i.e. we count the classes in which $w$ occurs only once and renormalize this. \\
 For estimating $b_c$ there is no closed form solution.
-\subsection*{Leaving one document out}
-TODO
 \section*{Task 3}
 The problem with this is that this produces a circular dependency. To calculate the probability of a tag choice at position n, one needs the probability at position n+1, which in turn depends on n. This means that one can only compute the probability of a closed off tag sequence. To find the most probable tag sequence for a given sentence, one would thus have to compute the probability for all possible tag sequences, which is very inefficient.
 \section*{Task 4}
