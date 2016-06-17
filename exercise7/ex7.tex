@@ -1,0 +1,76 @@
+%% Dokumentenklasse (Koma Script) -----------------------------------------
+\documentclass[%
+   11pt,              % Schriftgroesse
+   ngerman,           % wird an andere Pakete weitergereicht
+   a4paper,           % Seitengroesse
+   DIV11,             % Textbereichsgroesse (siehe Koma Skript Dokumentation !)
+]{scrartcl}%     Klassen: scrartcl, scrreprt, scrbook
+% -------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc} % Font Encoding, benoetigt fuer Umlaute
+\usepackage[ngerman]{babel}   % Spracheinstellung
+
+\usepackage[T1]{fontenc} % T1 Schrift Encoding
+\usepackage{textcomp}    % Zusatzliche Symbole (Text Companion font extension)
+\usepackage{lmodern}     % Latin Modern Schrift
+\usepackage{listings}
+\usepackage{framed}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{framed}
+\usepackage{listings}
+%für die Konfusionsmatrizen
+\usepackage{csvsimple}
+\usepackage{lscape}
+
+
+\usepackage[left=2cm,right=3cm,top=2cm,bottom=2cm,includeheadfoot]{geometry}
+%Kopf- und Fußzeile
+\usepackage{fancyhdr}
+%Grafiken einbetten
+\usepackage{graphicx}
+
+\pagestyle{fancy}
+\fancyhf{}
+%Übungsteilnehmer
+\fancyhead[L]{Matthias Hansen, 331600~~Lukas Huwald, 322890\\}
+%Kopfzeile mittig
+\fancyhead[R]{NLP Exercise07}
+%Linie oben
+\renewcommand{\headrulewidth}{0.5pt}
+
+\setlength{\parskip}{1ex}
+
+%Fußzeile links bzw. innen
+\fancyfoot[L]{}
+%Fußzeile rechts bzw. außen
+\fancyfoot[R]{\thepage}
+%Linie unten
+\renewcommand{\footrulewidth}{0.5pt}
+%% Dokument Beginn %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\section*{Task 1}
+For the trigram model we use the auxiliary quantity $Q(n,g,g')$ which stands for the value of the optimal tag sequence of length $n$ where the last tag is $g$ and the penultimate tag is $g'$.
+\begin{equation*}
+	Q(n,g,g') = \underset{g_1^n: g_n = g, g_{n-1}=g'}{\text{max}}\{\prod_{i=1}^n p(w_i|g_i) \cdot p(g_i|g_{i-1},g_{i-2})\}
+\end{equation*}
+The dynamic programming recurrence is
+\begin{equation*}
+	Q(n,g,g') = p(w_n|g) \cdot \underset{g''}{\max}\{p(g|g',g'') \cdot Q(n-1,g',g''\}
+\end{equation*}
+The value of the optimal sequence is
+\begin{equation*}
+	\underset{g,g'}{\max}\{Q(N,g,g')\}
+\end{equation*}
+and the time complexity is $\mathcal{O}(N \cdot G^3)$, while the space complexity is $\mathcal{O}(N \cdot G^2)$. The optimal tag sequence can be recovered by backtracking. \par
+For a general $m+1$-gram model we would use the quantities
+\begin{equation*}
+	Q(n,g,g',\ldots,g^{(m-1)}) = \underset{g_1^n: g_{n-(m-1)}^n = g^{(m-1)},\ldots, g}{\max}\{\prod_{i=1}^n p(w_i|g_i) \cdot p(g_i|g_{i-m}^{i-1}) \}
+\end{equation*}
+with the recurrence
+\begin{equation*}
+	Q(n,g,g',\ldots,g^{(m-1)}) = p(w_n|g) \cdot \underset{\tilde{g}}{\max}\{p(g|g',\ldots,g^{(m-1)},\tilde{g}) \cdot Q(n,g',\ldots,g^{(m-1)},\tilde{g})\}
+\end{equation*}
+which results in time complexity $\mathcal{O}(N \cdot G^{m+1})$, while the space complexity is $\mathcal{O}(N \cdot G^m)$.
+\section*{Task 2}
+\end{document}
