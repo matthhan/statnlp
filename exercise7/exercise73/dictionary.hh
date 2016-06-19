@@ -5,6 +5,8 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+using std::cout;
+using std::endl;
 using std::vector;
 using std::string;
 using std::getline;
@@ -16,6 +18,7 @@ class Dictionary {
         vector<Word> insertMany(vector<string> w);
         Word getWordForString(string w);
         string getStringForWord(Word index);
+        vector<Word> getAllWords();
         bool contains(string w);
         int size();
         Dictionary();

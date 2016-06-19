@@ -77,3 +77,10 @@ vector<Word> Dictionary::insertMany(vector<string> sequence) {
     }
     return result;
 }
+vector<Word> Dictionary::getAllWords() {
+    vector<Word> res = vector<Word>();
+    for(auto w:this->content) {
+        if(w != "") res.push_back(this->getWordForString(w));
+    }
+    return res;
+}
