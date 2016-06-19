@@ -45,6 +45,7 @@ void PosBigramModel::readUnigramModel(ifstream& stream) {
         double prob = pow(10,stod(stringRead[0]));
         string unigram = stringRead[1];
         Pos pos = this->posDictionary->insert(unigram);
+        if(unigram == "</s>") break;
         double backoffWeight = pow(10,stod(stringRead[2]));
         this->fallbackUnigramModel[pos] = prob;
         this->backoffWeights[pos] = backoffWeight;
