@@ -70,20 +70,10 @@ void Dictionary::makeImmutable() {
 int Dictionary::size() {
     return this->m_size;
 }
-string readSpaceSeparatedToken(stringstream& stream) {
-    string s; getline(stream,s,' ');
-    //Handle multiple spaces in a row
-    if(s == "" && !stream.eof()) return readSpaceSeparatedToken(stream);
-    return s;
-}
-vector<Word> Dictionary::insertSequence(string sequence) {
-    auto stream = stringstream(sequence);
+vector<Word> Dictionary::insertMany(vector<string> sequence) {
     auto result = vector<Word>();
-    while(true) {
-        auto token = readSpaceSeparatedToken(stream);
-        if(token == "") break;
+    for(auto token:sequence) {
         result.push_back(this->insert(token));
-        
     }
     return result;
 }

@@ -13,7 +13,7 @@ using std::stringstream;
 class Dictionary {
     public:
         Word insert(string w);
-        vector<Word> insertSequence(string w);
+        vector<Word> insertMany(vector<string> w);
         Word getWordForString(string w);
         string getStringForWord(Word index);
         bool contains(string w);
