@@ -1,13 +1,12 @@
 #include "pos_tagger.hh"
-PosTagger::PosTagger() {
-    this->posBigramModel = PosBigramModel();
-    this->membershipModel = MembershipModel();
-}
+PosTagger::PosTagger(Dictionary* wordDictionary,Dictionary* posDictionary) : 
+    membershipModel(wordDictionary), 
+    posBigramModel(posDictionary) {}
 void PosTagger::trainOn(AnnotatedSentence s) {
-    //TODO:implement
+    this->membershipModel.trainOn(s);
 }
 void PosTagger::parsePosBigramModel(string filename){
-    //TODO:implement
+    this->posBigramModel.parseFromFile(filename);
 }
 TagSequence PosTagger::tag(Sentence s) {
     //TODO:implement
