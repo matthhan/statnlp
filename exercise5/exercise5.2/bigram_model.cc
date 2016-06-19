@@ -66,8 +66,9 @@ void BigramModel::readBigramModel(ifstream& stream) {
     while((line = readLine(stream)) != "") {
         auto bigram = splitAt(line,'\t');
         double prob = pow(10,stod(bigram[0]));
-        string readString1 = bigram[1];
-        string readString2 = bigram[1];
+        auto words = splitAt(bigram[1], ' ');
+        string readString1 = words[0];
+        string readString2 = words[1];
         Word word1 = this->dict->insert(readString1);
         Word word2 = this->dict->insert(readString2);
         auto insertAt = pair<Word,Word>(word1,word2);
