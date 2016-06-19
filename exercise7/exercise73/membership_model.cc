@@ -8,12 +8,12 @@ void MembershipModel::trainOn(Pos p,Word w) {
     this->posSpecificWordCount[p][w]++;
 }
 void MembershipModel::trainOn(AnnotatedSentence s) {
-    for(auto tuple:s) this->trainOn(tuple.first,tuple.second);
+    for(auto tuple:s) this->trainOn(tuple.second,tuple.first);
 }
 double MembershipModel::probability(Pos p,Word w) {
-    auto count = this->posSpecificWordCount[p][w] + 1;
-    auto normalizingFactor = this->posCount[p] + this->wordDictionary->size();
-    return count/normalizingFactor;
+    double count = (double)this->posSpecificWordCount[p][w] + 1;
+    auto normalizingFactor = (double)this->posCount[p] + (double)this->wordDictionary->size();
+    return (double)count/(double)normalizingFactor;
 }
 double MembershipModel::logProbability(Pos p,Word w) {
     return log(this->probability(p,w));
