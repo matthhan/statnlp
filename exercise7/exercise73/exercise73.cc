@@ -10,6 +10,7 @@
 
 #include "dictionary.hh"
 #include "pos_tagger.hh"
+#include "file_io.hh"
 
 using std::endl;
 using std::cout;
@@ -19,8 +20,6 @@ using std::ifstream;
 //Forward declarations
 void printUsage();
 map<string,string> parseCLIParams(int argc,char* argv[]);
-string readLine(ifstream& stream);
-bool canReadMore(ifstream& stream);
 int findNumberOfMatches(TagSequence a, TagSequence b);
 
 int main(int argc, char* argv[]) {
@@ -35,16 +34,16 @@ int main(int argc, char* argv[]) {
     auto wordDictionary = Dictionary();
     auto posDictionary = Dictionary();
 
-    auto tagger = PosTagger();
+    auto tagger = PosTagger(&wordDictionary,&posDictionary);
     
     tagger.parsePosBigramModel(posBigramModelPath);
     auto trainSentencesFile = ifstream(trainSentencesPath);
     auto trainTagsFile = ifstream(trainTagsPath);
 
     while(canReadMore(trainSentencesFile)) {
-        Sentence s = wordDictionary.insertSequence(readLine(trainSentencesFile));
-        TagSequence t = posDictionary.insertSequence(readLine(trainTagsFile));
-        AnnotatedSentence as = makeAnnotatedSentence(s,t);
+        Sentence sentence = wordDictionary.insertMany(splitAt(readLine(trainSentencesFile),' '));
+        TagSequence tagSequence = posDictionary.insertMany(splitAt(readLine(trainTagsFile),' '));
+        AnnotatedSentence as = makeAnnotatedSentence(sentence,tagSequence);
         tagger.trainOn(as);
     }
     trainSentencesFile.close();
@@ -58,8 +57,8 @@ int main(int argc, char* argv[]) {
     int numberCorrectlyTagged = 0;
     int numberTried = 0;
     while(canReadMore(testSentencesFile)) {
-        Sentence s = wordDictionary.insertSequence(readLine(testSentencesFile));
-        TagSequence t = posDictionary.insertSequence(readLine(trainTagsFile));
+        Sentence s = wordDictionary.insertMany(splitAt(readLine(testSentencesFile),' '));
+        TagSequence t = posDictionary.insertMany(splitAt(readLine(trainTagsFile),' '));
         TagSequence found = tagger.tag(s);
         numberCorrectlyTagged += findNumberOfMatches(t,found);
         numberTried += t.size();
@@ -115,10 +114,4 @@ void printUsage() {
        "<program> -t <file-with-training-sentences> -u <file-with-training-tag-sequences>" << endl << 
        "-v <file-with-pos-bigram-model>" << endl <<
        "-w <file-with-test-sentences> -x <file-with-test-tag-sequences>" << endl;
-}
-std::string readLine(std::ifstream& stream) {
-    std::string s;std::getline(stream,s); return s;
-}
-bool canReadMore(std::ifstream& stream) {
-    return !stream.eof();
 }
