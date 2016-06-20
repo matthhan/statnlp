@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
 
 int findNumberOfMatches(TagSequence a, TagSequence b) {
     int matches = 0;
-    for(int i = 0; i < a.size();i++) {
+    for(unsigned int i = 0; i < a.size();i++) {
         if(a[i] == b[i]) matches++;
     } 
     return matches;
