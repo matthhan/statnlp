@@ -22,7 +22,7 @@
 %für die Konfusionsmatrizen
 \usepackage{csvsimple}
 \usepackage{lscape}
-
+\usepackage{url,hyperref}
 
 \usepackage[left=2cm,right=3cm,top=2cm,bottom=2cm,includeheadfoot]{geometry}
 %Kopf- und Fußzeile
@@ -73,4 +73,41 @@ with the recurrence
 \end{equation*}
 which results in time complexity $\mathcal{O}(N \cdot G^{m+1})$, while the space complexity is $\mathcal{O}(N \cdot G^m)$.
 \section*{Task 2}
+For our experiments we chose the following five sentences:
+\begin{enumerate}
+	\item The quick brown fox jumps over the lazy dog. (Simple syntactic structure and vocabulary)
+	\item England, who top the table after drawing with Russia and beating Wales, face Slovakia in Saint-Etienne. (Taken from a sports article, includes names/locations)
+	\item It is rare, he says, that he uses a weapon to threaten his victims, but says that when one is needed, he has to hire it from a local crime boss, and then return it on pain of death. (Taken from a news article, more complex structure and indirect speech)
+	\item That men do not learn very much from the lessons of history is the most important of all the lessons of history. (Quote by Aldous Huxley, repetition of phrases)
+	\item The complex houses married and single soldiers and their families. (Garden path sentence where houses is used as the verb)
+\end{enumerate}
+As a translation service we used bing translator: \url{https://www.bing.com/translator}. \\
+With intermediate language german the results are:
+\begin{enumerate}
+	\item The quick brown fox jumps over the lazy dog.
+	\item England, to propose, in the table after drawing with Russia and Wales put Slovakia in Saint-Étienne.
+	\item It is rare, he says, that he used a weapon to threaten his victims, but says that if one is needed, he must be from a local gangster boss to rent, and then again under threat of death.
+	\item The lessons of history that men learn not very much from the lessons of history is the most important.
+	\item The complex is home to married and single soldiers and their families.
+\end{enumerate}
+The first sentence did not change at all. In case of the fifth sentence the structure was changed a bit but the sentence is still grammatically and semantically correct. The fourth sentence was restructured a bit and contains one small mistake (the first lessons should be singular) but is otherwise correct both grammatically and semantically. The third sentence contains some mistake and does not sound well written, but on the whole the meaning can be recovered. The second sentence did not survive the translation process well and is neither grammatically correct nor understandable. \par
+After a second round of translating back and forth, the results are
+\begin{enumerate}
+	\item The quick brown fox jumps over the lazy dog. 
+	\item England, to propose, in the table after drawing with Russia and Wales put Slovakia in Saint Étienne.
+	\item It is rare, he says that he used a weapon to threaten his victims, but says that if one is needed, he must be to rent from a local gangster boss and then again under threat of the death penalty.
+	\item The most important is the lessons of history that men not very much to learn from the lessons of history.
+	\item The complex is home to married and single soldiers and their families.
+\end{enumerate}
+The most correct sentences 1 and 5 did not change again, and neither did the most incorrect second sentence. The third sentence was changed up a bit but still more or less says the same. However, the phrasing of the fourth sentence became much worse and it is now hardly understandable. \par
+Starting from the original sentences, we now try russian as the intermediate language. The results are
+\begin{enumerate}
+	\item The quick brown fox jumps over the lazy dog. 
+	\item England, who top the table after drawing with Russia beating Wales face Slovakia in Saint-Etienne. 
+	\item It is rare, he said, he uses a weapon to threaten his victims, but said that when one order, he should hire him with the local crime boss, and then return it under penalty of death. 
+	\item That men don't really learn much from the lessons of history is the most important of all the lessons of history. 
+	\item The complex is married and one soldiers and their families.
+\end{enumerate}
+Again the first simple sentence was translated without trouble. The translation of the second sentence actually worked much better than with German as the intermediate language, only the word ``and'' is missing. The translation quality of the third sentence is comparable to the first experiment. The fourth sentence was translated correctly but is closer to the original structure of the source sentence than the one obtained by translating to german and back. Looking at these sentences, the results actually seem to be better than by using german, but the last sentence (which was correct in the first experiment) was translated wrongly in a quite funny way. \par
+ To conclude: the choice of intermediate language matters for this translation service, so it does probably not use the ``interlingua'' approach to SMT. The results differ from sentence to sentence and it is not the case that one intermediate langauge leads to better results for all sentences. But in most cases the translation to russian and back seems to work a bit better for our examples.
 \end{document}
