@@ -6,11 +6,14 @@
 #include "dictionary.hh"
 #include <string>
 #include <limits>
+#include <algorithm>
 #include "pos.hh"
 #include "word.hh"
 
 using std::string;
 using std::numeric_limits;
+using std::vector;
+using std::reverse;
 
 class PosTagger {
     public:

@@ -1,4 +1,9 @@
 #include "pos_tagger.hh"
+//Some forward declarations
+vector<double> addComponentWise(vector<double>& a, vector<double>& b);
+int argmax(vector<double> inp);
+double max(vector<double> inp);
+vector<int> followBackpointer(vector<vector<int>>& backpointers,int startingIndex);
 PosTagger::PosTagger(Dictionary* wordDictionary,Dictionary* posDictionary) : 
     membershipModel(wordDictionary), 
     posBigramModel(posDictionary) {
@@ -12,10 +17,6 @@ void PosTagger::parsePosBigramModel(string filename){
     this->posBigramModel.parseFromFile(filename);
     possiblePosesDirty = true;
 }
-//Some forward declarations
-vector<double> addComponentWise(vector<double>& a, vector<double>& b);
-int argmax(vector<double> inp);
-void printVector(vector<double> vec);
 TagSequence PosTagger::tag_greedy(Sentence sentence) {
     this->refreshPossiblePoses();
     vector<Pos> finalSequence = vector<Pos>();
@@ -31,13 +32,9 @@ TagSequence PosTagger::tag_greedy(Sentence sentence) {
        auto bigramProbabilities = this->getBigramLogProbabilities(finalSequence[i-1]);
        auto scores = addComponentWise(membershipProbabilities,bigramProbabilities);
        auto bestChoice = this->possiblePoses[argmax(scores)];
-       //printVector(membershipProbabilities);
        finalSequence.push_back(bestChoice);
     }
     return finalSequence;
-}
-TagSequence PosTagger::tag(Sentence sentence) {
-    return TagSequence();
 }
 vector<double> PosTagger::getMembershipLogProbabilities(Word w) {
     auto res = vector<double>();
@@ -53,6 +50,40 @@ vector<double> addComponentWise(vector<double>& a, vector<double>& b) {
     vector<double> res = vector<double>(a.size());
     for(unsigned int i= 0; i < a.size();i++) res[i] = a[i] + b[i];
     return res;
+}
+TagSequence PosTagger::tag(Sentence sentence) {
+    this->refreshPossiblePoses();
+    auto intermediateResults = vector<vector<double>>(sentence.size());
+    auto backpointers = vector<vector<int>>(sentence.size());
+    for(unsigned int i = 0; i < sentence.size();i++) {
+        intermediateResults[i] = vector<double>(this->possiblePoses.size());
+        backpointers[i] = vector<int>(this->possiblePoses.size());
+        //First outer loop special case
+        if(i == 0) {
+            for(unsigned int j = 0; j < this->possiblePoses.size();j++) {
+                intermediateResults[i][j] = this->membershipModel.logProbability(this->possiblePoses[j],sentence[i]);
+            }
+            continue;
+        }
+        //Normal case
+        for(unsigned int j = 0; j < this->possiblePoses.size();j++) {
+           double membershipLogProbability = this->membershipModel.logProbability(this->possiblePoses[j],sentence[i]); 
+
+           auto combinationPossibilities = vector<double>(this->possiblePoses.size());
+           for(unsigned int k = 0; k < this->possiblePoses.size();k++) {
+               auto bigramProbability = this->posBigramModel.logProbability(this->possiblePoses[k],this->possiblePoses[j]);
+               combinationPossibilities[k] = bigramProbability + 
+                                             intermediateResults[i-1][k];
+           }
+           intermediateResults[i][j] = max(combinationPossibilities) + membershipLogProbability;
+           backpointers[i][j] = argmax(combinationPossibilities);
+        }
+    } 
+    auto bestEndingTagIndex = argmax(intermediateResults[sentence.size()-1]);
+    auto bestTagSequenceIndices = followBackpointer(backpointers,bestEndingTagIndex);
+    auto resultingTagSequence = vector<Pos>(bestTagSequenceIndices.size());
+    for(unsigned int i = 0; i < bestTagSequenceIndices.size();i++) resultingTagSequence[i] = this->possiblePoses[bestTagSequenceIndices[i]];
+    return resultingTagSequence;
 }
 void PosTagger::refreshPossiblePoses() {
     if(this->possiblePosesDirty) {
@@ -71,3 +102,22 @@ int argmax(vector<double> inp) {
     }
     return res;
 }
+double max(vector<double> inp) {
+    double res = -1 * numeric_limits<double>::max();
+    for(auto val: inp) {
+        if(val > res) res = val;
+    }
+    return res;
+}
+vector<int> followBackpointer(vector<vector<int>>& backpointers,int startingIndex) {
+    auto result = vector<int>();
+    auto cur = startingIndex;
+    result.push_back(cur);
+    for(unsigned int i = (backpointers.size()-1); i != 0; i--) {
+       cur = backpointers[i][cur];
+       result.push_back(cur);
+    }
+    reverse(result.begin(),result.end());
+    return result;
+}
+
