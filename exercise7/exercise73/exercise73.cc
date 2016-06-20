@@ -32,6 +32,8 @@ int main(int argc, char* argv[]) {
     string posBigramModelPath = params["posBigramModelPath"];
     string testSentencesPath = params["testSentencesPath"];
     string testTagsPath = params["testTagsPath"];
+    bool greedy = false;
+    if(params["greedy"] == "true") greedy = true;
 
     auto wordDictionary = Dictionary();
     auto posDictionary = Dictionary();
@@ -64,7 +66,9 @@ int main(int argc, char* argv[]) {
     while(canReadMore(testSentencesFile)) {
         Sentence s = wordDictionary.insertMany(splitAt(readLine(testSentencesFile),' '));
         TagSequence t = posDictionary.insertMany(splitAt(readLine(testTagsFile),' '));
-        TagSequence found = tagger.tag(s);
+        TagSequence found;
+        if(!greedy) found = tagger.tag(s); 
+        else found = tagger.tag_greedy(s);
         numberCorrectlyTagged += findNumberOfMatches(found,t);
         numberTried += t.size();
         i++;
@@ -89,7 +93,7 @@ int findNumberOfMatches(TagSequence a, TagSequence b) {
 map<string,string> parseCLIParams(int argc,char* argv[]) {
     auto params = map<string,string>();
     int c;
-    while((c = getopt(argc,argv,"t:u:v:w:x:")) != -1) {
+    while((c = getopt(argc,argv,"t:u:v:w:x:g")) != -1) {
         switch (c) {
            case 't':
                params["trainSentencesPath"] = optarg;
@@ -105,6 +109,9 @@ map<string,string> parseCLIParams(int argc,char* argv[]) {
                break;
            case 'x':
                params["testTagsPath"] = optarg;
+               break;
+           case 'g':
+               params["greedy"] = "true";
                break;
            case '?':
                printUsage();
