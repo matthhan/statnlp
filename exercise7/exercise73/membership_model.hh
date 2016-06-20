@@ -4,6 +4,7 @@
 #include "annotated_sentence.hh"
 #include <cmath>
 #include <map>
+#include <utility>
 
 using std::log;
 using std::map;

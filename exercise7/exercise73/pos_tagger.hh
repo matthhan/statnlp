@@ -18,10 +18,11 @@ class PosTagger {
         void trainOn(AnnotatedSentence s);
         void parsePosBigramModel(string filename);
         TagSequence tag(Sentence s);
+        TagSequence tag_greedy(Sentence s);
         void refreshPossiblePoses();
     private:
-        PosBigramModel posBigramModel;
         MembershipModel membershipModel;
+        PosBigramModel posBigramModel;
         Dictionary* posDictionary;
         vector<double> getMembershipLogProbabilities(Word w);
         vector<double> getBigramLogProbabilities(Pos p);

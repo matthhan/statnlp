@@ -16,7 +16,7 @@ void PosTagger::parsePosBigramModel(string filename){
 vector<double> addComponentWise(vector<double>& a, vector<double>& b);
 int argmax(vector<double> inp);
 void printVector(vector<double> vec);
-TagSequence PosTagger::tag(Sentence sentence) {
+TagSequence PosTagger::tag_greedy(Sentence sentence) {
     this->refreshPossiblePoses();
     vector<Pos> finalSequence = vector<Pos>();
 
@@ -26,7 +26,7 @@ TagSequence PosTagger::tag(Sentence sentence) {
     //First word is just the word with the highest membership probability
     finalSequence.push_back(this->possiblePoses[argmax(this->getMembershipLogProbabilities(first))]);
     if(sentence.size() == 1) return finalSequence;
-    for(int i = 1; i < sentence.size(); i++) {
+    for(unsigned int i = 1; i < sentence.size(); i++) {
        auto membershipProbabilities =  this->getMembershipLogProbabilities(sentence[i]); 
        auto bigramProbabilities = this->getBigramLogProbabilities(finalSequence[i-1]);
        auto scores = addComponentWise(membershipProbabilities,bigramProbabilities);
@@ -35,6 +35,9 @@ TagSequence PosTagger::tag(Sentence sentence) {
        finalSequence.push_back(bestChoice);
     }
     return finalSequence;
+}
+TagSequence PosTagger::tag(Sentence sentence) {
+    return TagSequence();
 }
 vector<double> PosTagger::getMembershipLogProbabilities(Word w) {
     auto res = vector<double>();
@@ -48,7 +51,7 @@ vector<double> PosTagger::getBigramLogProbabilities(Pos first)  {
 }
 vector<double> addComponentWise(vector<double>& a, vector<double>& b) {
     vector<double> res = vector<double>(a.size());
-    for(int i= 0; i < a.size();i++) res[i] = a[i] + b[i];
+    for(unsigned int i= 0; i < a.size();i++) res[i] = a[i] + b[i];
     return res;
 }
 void PosTagger::refreshPossiblePoses() {
