@@ -127,7 +127,10 @@ void printUsage() {
     cout << "Usage:" << endl << 
        "<program> -t <file-with-training-sentences> -u <file-with-training-tag-sequences>" << endl << 
        "-v <file-with-pos-bigram-model>" << endl <<
-       "-w <file-with-test-sentences> -x <file-with-test-tag-sequences>" << endl;
+       "-w <file-with-test-sentences> -x <file-with-test-tag-sequences>" << endl << 
+       "Additional Options:" << endl <<
+       "-g: Use \"greedy\" method" << endl;
+        
 }
 void validateParams(map<string,string>& params) {
     if(params["trainSentencesPath"] == "" ||
