@@ -1,0 +1,120 @@
+%% Dokumentenklasse (Koma Script) -----------------------------------------
+\documentclass[%
+   11pt,              % Schriftgroesse
+   ngerman,           % wird an andere Pakete weitergereicht
+   a4paper,           % Seitengroesse
+   DIV11,             % Textbereichsgroesse (siehe Koma Skript Dokumentation !)
+]{scrartcl}%     Klassen: scrartcl, scrreprt, scrbook
+% -------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc} % Font Encoding, benoetigt fuer Umlaute
+\usepackage[ngerman]{babel}   % Spracheinstellung
+
+\usepackage[T1]{fontenc} % T1 Schrift Encoding
+\usepackage{textcomp}    % Zusatzliche Symbole (Text Companion font extension)
+\usepackage{lmodern}     % Latin Modern Schrift
+\usepackage{listings}
+\usepackage{framed}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{framed}
+\usepackage{listings}
+%für die Konfusionsmatrizen
+\usepackage{csvsimple}
+\usepackage{lscape}
+\usepackage{url,hyperref}
+
+\usepackage[left=2cm,right=3cm,top=2cm,bottom=2cm,includeheadfoot]{geometry}
+%Kopf- und Fußzeile
+\usepackage{fancyhdr}
+%Grafiken einbetten
+\usepackage{graphicx}
+
+\pagestyle{fancy}
+\fancyhf{}
+%Übungsteilnehmer
+\fancyhead[L]{Matthias Hansen, 331600~~Lukas Huwald, 322890\\}
+%Kopfzeile mittig
+\fancyhead[R]{NLP Exercise08}
+%Linie oben
+\renewcommand{\headrulewidth}{0.5pt}
+
+\setlength{\parskip}{1ex}
+
+%Fußzeile links bzw. innen
+\fancyfoot[L]{}
+%Fußzeile rechts bzw. außen
+\fancyfoot[R]{\thepage}
+%Linie unten
+\renewcommand{\footrulewidth}{0.5pt}
+%% Dokument Beginn %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\section*{Task 1}
+We want to sum over all paths of tag sequences $g_1^N$ that satisfy $g_n = g$. Every such path over $g_n = g$ consists of two parts, the ``past'' $g_1^{n}$ and the ``future'' $g_{n+1}^N$. The important thing to see here is that because we are using a bigram model for the tags, the past and the future are actually independent, i.e. the future path does not depend on the past path. So the summation can be carried out for past and future separately and the results can then be multiplied. \par
+Formal derivation of this idea:
+\begin{align*}
+	p_n(g|w_1^N) &= \sum_{g_1^N: g_n = g} p(g_1^N|w_1^N) \\
+	&= \sum_{g_1^N: g_n = g} \prod_{i=1}^N p(g_i|g_{i-1}) \cdot p(w_i|g_i) \\
+	&= \sum_{g_1^{n}: g_n = g} \sum_{g_{n+1}^N} \prod_{i=1}^n p(g_i|g_{i-1}) \cdot p(w_i|g_i) \prod_{i=n+1}^N p(g_i|g_{i-1}) \cdot p(w_i|g_i)\\
+	&= \sum_{g_1^{n}: g_n = g} \prod_{i=1}^n p(g_i|g_{i-1}) \cdot p(w_i|g_i) \sum_{g_{n+1}^N} \prod_{i=n+1}^N p(g_i|g_{i-1}) \cdot p(w_i|g_i)\\
+	&= \bigg(\sum_{g_1^{n}: g_n = g} \prod_{i=1}^n p(g_i|g_{i-1}) \cdot p(w_i|g_i)\bigg)\bigg( \sum_{g_{n+1}^N} \prod_{i=n+1}^N p(g_i|g_{i-1}) \cdot p(w_i|g_i)\bigg) 
+\end{align*}
+where the last step of the derivation is possible because the content of the inner sum starting at $i=n+1$ does not at all depend on the running index of the outer sum. \par
+Now both of the sums in the above product can be computed efficiently using dynamic programming and then just need to be multiplied in the end. \par
+For the sum over the past, we use the auxiliary quantities $Q(i,g')$ for the sum over all paths over positions $1\ldots i$ that end with tag $g'$. The sum then has value $Q(n,g)$ because $g_n = g$. The dynamic programming recurrence is
+\begin{equation*}
+	Q(i,g') = p(w_i|g') \cdot \sum_{\tilde{g}} p(g'|\tilde{g}) \cdot Q(i-1,\tilde{g}) 
+\end{equation*}
+with initial values
+\begin{equation*}
+	Q(1,g') = p(w_1|g') \cdot p(g'|\$)
+\end{equation*}
+where $\$ $ is the sentence start symbol. \par
+For the sum over the future, we use the auxiliary quantities $P(j,g')$ for the sum over all paths over positions $n+1\ldots j$ that end with tag $g'$. The sum then has value $\sum_{g'} P(N,g')$. The dynamic programming recurrence is
+\begin{equation*}
+	P(j,g') = p(w_j|g') \cdot \sum_{\tilde{g}} p(g'|\tilde{g}) \cdot P(j-1,\tilde{g}) 
+\end{equation*}
+with initial values
+\begin{equation*}
+	P(n+1,g') = p(w_{n+1}|g') \cdot p(g'|g)
+\end{equation*}
+because we have fixed $g_n = g$. \par
+The final result is $Q(n,g) \sum_{g'} P(N,g')$. \par
+Let $G$ be the number of POS classes. \\ The space complexity of this approach is only $\mathcal{O}(G)$. The reason for this is that both in the computation of the $Q$ values and the $P$ values we only need to remember the values of iteration $i$ to compute the iteration $i+1$. So only $2 \cdot G$ values need to be remembered.\\
+The time complexity is $\mathcal{O}(N \cdot G^2)$: we compute $N \cdot G$ values and the computation of each value takes time $\mathcal{O}(G)$. Because in practise both sentence length $N$ and number of POS classes $G$ are relatively small (< 100) this is really manageable. \par
+Below is a pseudocode implementation of the algorithm. To simplify notation, we did not make explicit in the code the improvement in space complexity which can be achieved by remembering only two steps of the iteration.
+\lstset{language=C, showstringspaces=false}
+\begin{lstlisting}
+for (gprime = 1...G) {
+  Q(1,gprime) = p(w[1]|gprime) * p(gprime|$);
+  P(n+1,gprime) = p(w[n+1]|gprime) * p(gprime|g);
+}
+for (i = 2...n) {
+  for (gprime = 1...G) {
+    Q(i,gprime) = 0;
+	for (gtilde = 1...G) {
+	  Q(i,gprime) += p(gprime|gtilde) * Q(i-1,gtilde);
+	}
+    Q(i,gprime) *= p(w[i]|gprime);
+  }
+}
+for (j = n+2...N) {
+  for (gprime = 1...G) {
+	P(j,gprime) = 0;
+	for (gtilde = 1...G) {
+	  P(j,gprime) += p(gprime|gtilde) * P(j-1,gtilde);
+	}
+	P(j,gprime) *= p(w[j]|gprime);
+  }
+}
+res = 0;
+for gprime = (1...G) {
+  res += P(N,gprime);
+res *= Q(n,g);
+return res;
+\end{lstlisting}
+\section*{Task 2}
+\section*{Task 3}
+\section*{Task 4}
+
+\end{document}
