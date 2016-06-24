@@ -59,7 +59,7 @@ Formal derivation of this idea:
 	&= \sum_{g_1^{n}: g_n = g} \prod_{i=1}^n p(g_i|g_{i-1}) \cdot p(w_i|g_i) \sum_{g_{n+1}^N} \prod_{i=n+1}^N p(g_i|g_{i-1}) \cdot p(w_i|g_i)\\
 	&= \bigg(\sum_{g_1^{n}: g_n = g} \prod_{i=1}^n p(g_i|g_{i-1}) \cdot p(w_i|g_i)\bigg)\bigg( \sum_{g_{n+1}^N} \prod_{i=n+1}^N p(g_i|g_{i-1}) \cdot p(w_i|g_i)\bigg) 
 \end{align*}
-where the last step of the derivation is possible because the content of the inner sum starting at $i=n+1$ does not at all depend on the running index of the outer sum. \par
+where the last step of the derivation is possible because the content of the inner sum starting at $g_{n+1}$ does not at all depend on the running index of the outer sum. \par
 Now both of the sums in the above product can be computed efficiently using dynamic programming and then just need to be multiplied in the end. \par
 For the sum over the past, we use the auxiliary quantities $Q(i,g')$ for the sum over all paths over positions $1\ldots i$ that end with tag $g'$. The sum then has value $Q(n,g)$ because $g_n = g$. The dynamic programming recurrence is
 \begin{equation*}
