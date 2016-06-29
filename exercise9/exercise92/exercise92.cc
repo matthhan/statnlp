@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <ctype.h>
 #include <unistd.h>
+#include <set>
 #include "file_io.hh"
 
 using std::endl;
@@ -14,12 +15,17 @@ using std::string;
 using std::map;
 using std::ifstream;
 using std::min;
+using std::set;
 
 void validateParams(map<string,string>& params);
 map<string,string> parseCLIParams(int argc,char* argv[]);
 void printUsage();
+typedef string Word;
+typedef vector<Word> Sentence;
+//Calculates PER
+double per (Sentence reference, Sentence hypothesis);
+int countWordInSentence(Word w,Sentence s);
 //calculates WER
-typedef vector<string> Sentence ;
 double wer(Sentence reference,Sentence hypothesis);
 //Finds the best alignment path for WER
 vector<vector<int>> findPaths(Sentence reference,Sentence hypothesis);
@@ -44,15 +50,40 @@ int main(int argc, char* argv[]){
        auto hypothesisSentence = splitAt(readLine(hypothesisFile),' ');
        auto referenceSentence = splitAt(readLine(referenceFile),' ');
        //Calculates the optimal Paths and minimum Distances
-       double weri = wer(referenceSentence,hypothesisSentence);
-       cout << "The WER for Sentence " << i << " is " << weri << "." << endl;
-       sum += weri;
+       double eri;
+       if(positionIndependent) eri = per(referenceSentence,hypothesisSentence);
+       else eri = wer(referenceSentence,hypothesisSentence);
+       cout << "The Error Rate for Sentence " << i << " is " << eri << "." << endl;
+       sum += eri;
        i++;
     }
-    cout << "The average WER of all sentences is " << sum/(double)(i+1) << "." << endl;
+    cout << "The average Error Rate of all sentences is " << sum/(double)(i+1) << "." << endl;
     return 0;
 }
 
+int countWordInSentence(Word w,Sentence s) {
+    int count = 0;
+    for(auto w2:s) {
+        if(w == w2) count++;
+    }
+    return count;
+}
+double per(Sentence reference, Sentence hypothesis) {
+    //Insert all words into set so we can iterate over unique words
+    auto wordsInSentences = set<Word>();
+    for(Word w:reference) wordsInSentences.insert(w);
+    for(Word w:hypothesis) wordsInSentences.insert(w);
+
+    //count differences in frequencies
+    int errorCount = 0;
+    for(Word w:wordsInSentences) {
+        errorCount += abs(countWordInSentence(w,reference) - 
+                          countWordInSentence(w,hypothesis));
+    }
+
+    //Formula for PER according to Ney, Popovic 2007
+    return (((double)errorCount)/2) / reference.size();
+}
 
 double wer (Sentence reference, Sentence hypothesis) {
        auto d = findPaths(reference,hypothesis);
